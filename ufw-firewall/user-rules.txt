@@ -1,0 +1,72 @@
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ufw-firewall/user-rules.txt ####################
+#### path: n/a (boilerplate) #######################################################################
+#### destination: /etc/ufw/user.rules (after install) ##############################################
+#### purpose: UFW Firewall user rules configuration file (optimized for SimpleStack) ###############
+#### module version: UFW Firewall 0.36 #############################################################
+####################################################################################################
+
+*filter
+:ufw-user-input - [0:0]
+:ufw-user-output - [0:0]
+:ufw-user-forward - [0:0]
+:ufw-before-logging-input - [0:0]
+:ufw-before-logging-output - [0:0]
+:ufw-before-logging-forward - [0:0]
+:ufw-user-logging-input - [0:0]
+:ufw-user-logging-output - [0:0]
+:ufw-user-logging-forward - [0:0]
+:ufw-after-logging-input - [0:0]
+:ufw-after-logging-output - [0:0]
+:ufw-after-logging-forward - [0:0]
+:ufw-logging-deny - [0:0]
+:ufw-logging-allow - [0:0]
+:ufw-user-limit - [0:0]
+:ufw-user-limit-accept - [0:0]
+
+####################################################################################################
+#### UFW Firewall (User Rules): SSH Port Settings ##################################################
+####################################################################################################
+
+-A ufw-user-input -p tcp --dport @SSH_PORT -j ACCEPT
+-A ufw-user-input -p udp --dport @SSH_PORT -j ACCEPT
+
+####################################################################################################
+#### UFW Firewall (User Rules): HTTP Port Settings #################################################
+####################################################################################################
+
+-A ufw-user-input -p tcp --dport 80 -j ACCEPT
+-A ufw-user-input -p udp --dport 80 -j ACCEPT
+
+####################################################################################################
+#### UFW Firewall (User Rules): HTTPS (SSL) Port Settings ##########################################
+####################################################################################################
+
+-A ufw-user-input -p tcp --dport 443 -j ACCEPT
+-A ufw-user-input -p udp --dport 443 -j ACCEPT
+
+####################################################################################################
+#### UFW Firewall (User Rules): Logging Settings ###################################################
+####################################################################################################
+
+-A ufw-after-logging-input -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-A ufw-after-logging-forward -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-I ufw-logging-deny -m conntrack --ctstate INVALID -j RETURN -m limit --limit 3/min --limit-burst 10
+-A ufw-logging-deny -j LOG --log-prefix "[UFW BLOCK] " -m limit --limit 3/min --limit-burst 10
+-A ufw-logging-allow -j LOG --log-prefix "[UFW ALLOW] " -m limit --limit 3/min --limit-burst 10
+
+####################################################################################################
+#### UFW Firewall (User Rules): Rate Limiting Settings #############################################
+####################################################################################################
+
+-A ufw-user-limit -m limit --limit 3/minute -j LOG --log-prefix "[UFW LIMIT BLOCK] "
+-A ufw-user-limit -j REJECT
+-A ufw-user-limit-accept -j ACCEPT
+
+####################################################################################################
+#### UFW Firewall (User Rules): Commit Rules #######################################################
+####################################################################################################
+
+COMMIT

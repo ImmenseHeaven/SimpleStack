@@ -1,0 +1,98 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/3-cron-hourly.txt #############################
+#### path: /var/www/3-cron-hourly ##################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: SimpleStack cron job *hourly* (3/9) will run every 1 hour ############################
+#### module version: Ubuntu 20.04 ##################################################################
+####################################################################################################
+
+## !!! DO NOT MODIFY SIMPLESTACK CRONTAB OR CRON JOBS (ADD CUSTOM SCRIPTS TO SS-CUSTOM) ##
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SimpleStack Cron Job: *Hourly* ################################################################
+####################################################################################################
+
+## run ss-check if set to hourly ##
+if [[ "$SS_INTERVAL_CHECK" == "hourly" ]]; then 
+    source /var/www/ss-check
+fi
+
+## run ss-worker if set to hourly ##
+if [[ "$SS_INTERVAL_WORKER" == "hourly" ]]; then 
+    source /var/www/ss-worker
+fi
+
+## run ss-dump if set to hourly or if not defined (default) ##
+if [[ "$SS_INTERVAL_DUMP" == "hourly" || -z "$SS_INTERVAL_DUMP" ]]; then 
+    source /var/www/ss-dump
+fi
+
+## run ss-perms if set to hourly ##
+if [[ "$SS_INTERVAL_PERMS" == "hourly" ]]; then 
+    source /var/www/ss-perms
+fi
+
+## run ss-clean if set to hourly ##
+if [[ "$SS_INTERVAL_CLEAN" == "hourly" ]]; then 
+    source /var/www/ss-clean
+fi
+
+## delete lock files ##
+rm /tmp/3-cron-hourly*.lock*

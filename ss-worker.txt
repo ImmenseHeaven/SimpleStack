@@ -1,0 +1,191 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-worker.txt #################################
+#### path: /var/www/ss-worker ######################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Performs various SimpleStack maintenance tasks and downloads latest ss-check #########
+#### module version: Ubuntu 20.04 LTS ##############################################################
+####################################################################################################
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Worker: Backup SS-Config File To The Parent Directory ######################################
+####################################################################################################
+
+## backup ss-config file ##
+cp /var/www/ss-config /var/ss-config.bak
+
+####################################################################################################
+#### SS-Worker: Delete Any Previous / Leftover (Conflicting) Temporary Files #######################
+####################################################################################################
+
+rm /tmp/ss*
+rm /tmp/*cron*
+rm /tmp/blacklist*
+
+####################################################################################################
+#### SS-Worker: Download Latest SS-Check Core Script (Improves SimpleStack Redundancy) #############
+####################################################################################################
+
+## download ss-check and redundant 1-cron-often script ##
+wget -O /tmp/1-cron-often https://simplestack.git.supercluster.io/1-cron-often.txt
+wget -O /tmp/ss-check https://simplestack.git.supercluster.io/ss-check.txt
+
+## copy files to /var/www/ ##
+cp /tmp/1-cron-often /var/www/1-cron-often
+cp /tmp/ss-check /var/www/ss-check
+
+####################################################################################################
+#### SS-Worker: Reset SimpleStack Core Files Permissions (Skips Web Root) ##########################
+####################################################################################################
+
+## ensure core directories exist (except html) ##
+mkdir /var/www
+mkdir /var/www/cache
+mkdir /var/www/logs
+mkdir /var/www/meta
+
+## ensure misc files exist (makes things look pretty and suppresses error messages) ##
+if [[ ! -f "/var/www/wp.sql" ]]; then 
+    touch "/var/www/wp.sql"; 
+fi
+
+## chroot (SFTP) user directory ##
+chown root:root /var ## must be root:root
+chown root:root /var/www ## must be root:root
+chmod 0755 /var/www ## must be 0755
+
+## SimpleStack core scripts ##
+chown root:root /var/www/*cron* ## must be root:root
+chown root:root /var/www/ss* ## must be root:root
+chown www-data:www-data /var/www/wp.sql ## root:root should also work
+chmod 6770 /var/www/*cron* ## 4700 should also work
+chmod 6770 /var/www/ss* ## 4700 should also work
+chmod 0700 /var/www/ss-config
+chmod 6770 /var/www/wp.sql
+
+## its okay if the SFTP user accesses this stuff (but www-data access is the priority) ##
+chown www-data:www-data /var/www/cache ## must be www-data:www-data
+chown www-data:www-data /var/www/logs ## must be www-data:www-data
+chown www-data:www-data /var/www/meta ## must be www-data:www-data
+chmod 6775 /var/www/cache ## 6755 should also work
+chmod 6775 /var/www/logs ## 6755 should also work
+chmod 6775 /var/www/meta ## 6755 should also work
+
+## ensure log files exist ##
+if [ ! -f "/var/www/logs/clamav.log" ]; then touch "/var/www/logs/clamav.log"; fi
+if [ ! -f "/var/www/logs/error.log" ]; then touch "/var/www/logs/error.log"; fi
+if [ ! -f "/var/www/logs/mysql.log" ]; then touch "/var/www/logs/mysql.log"; fi
+if [ ! -f "/var/www/logs/nginx.log" ]; then touch "/var/www/logs/nginx.log"; fi
+if [ ! -f "/var/www/logs/redis.log" ]; then touch "/var/www/logs/redis.log"; fi
+
+## individual log files ##
+chown clamav:clamav /var/www/logs/clamav*.log*
+chown www-data:www-data /var/www/logs/error*.log*
+chown mysql:mysql /var/www/logs/mysql*.log*
+chown www-data:www-data /var/www/logs/nginx*.log*
+chown redis:redis /var/www/logs/redis*.log*
+
+####################################################################################################
+## SS-Worker: Download Latest Blacklist.txt File For Plugin Blacklist (MU Plugin) ##################
+####################################################################################################
+
+## download latest blacklist (or custom blacklist) ##
+if [[ -z "$PLUGIN_BLACKLIST_SOURCE" ]]; then 
+    wget -O /tmp/blacklist.txt https://simplestack.git.supercluster.io/wordpress/blacklist.txt
+else 
+    wget -O /tmp/blacklist.txt "$PLUGIN_BLACKLIST_SOURCE"
+fi
+
+## copy files to /var/www/html/wp-content/ ##
+cp /tmp/blacklist.txt /var/www/html/wp-content/blacklist.txt
+
+## reset permissions ##
+chown www-data:wordpress /var/www/html/wp-content/blacklist.txt ## change to www-data:www-data when ss-perms fixed
+chmod 0440 /var/www/html/wp-content/blacklist.txt
+
+####################################################################################################
+#### SS-Worker: Calculate Largest Directories On Server + Update Meta Records ######################
+####################################################################################################
+
+# du -a /var/www/html | sort -n -r | head -n 15
+
+####################################################################################################
+#### SS-Worker: Delete Any Previous / Leftover (Conflicting) Temporary Files #######################
+####################################################################################################
+
+rm -R -f /tmp/ss*
+rm -R -f /tmp/*cron*
+rm -R -f /tmp/blacklist*
+
+####################################################################################################
+#### SS-Worker: Various TEMP Tasks (e.g. Urgent Patches From The SimpleStack Team, Etc) ############
+####################################################################################################
+
+# source /var/www/ss-muplugs
+# source /var/www/ss-custom
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: https://linuxize.com/post/bash-functions/
+
+################
+#### SS_EOF ####
+################

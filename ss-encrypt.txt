@@ -1,0 +1,377 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-encrypt.txt ################################
+#### path: /var/www/ss-encrypt #####################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Generates or renews free SSL certs via OpenSSL and Certbot (Lets Encrypt) ############
+#### module version: Ubuntu 20.04 LTS + OpenSSL 1.1.1x + Certbot 0.31.x ############################
+####################################################################################################
+
+## SS-ENCRYPT WILL PERFORM BASIC NGINX MODIFICATION IN CASE IT RUNS WITHOUT SS-INSTALL ##
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work #########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Encrypt: PROCEED MESSAGE ###################################################################
+####################################################################################################
+
+## MESSAGE ##
+echo -e "\e[36mInstalling (or renewing) free SSL certs from OpenSSL and Certbot...\e[0m"
+
+####################################################################################################
+#### SS-Encrypt: Manually Delete Previous / Conflicting OpenSSL Certificates #######################
+####################################################################################################
+
+## delete existing OpenSSL certificates (and keys) ##
+rm /etc/ssl/nginx.crt
+rm /etc/ssl/nginx.key
+rm /etc/ssl/nginx.pem
+
+####################################################################################################
+#### SS-Encrypt: (Re)generate Self-Signed OpenSSL Certificate ######################################
+####################################################################################################
+
+## hide error message (bug) in OpenSSL 1.1.1 (remove this snippet later) ##
+touch /home/${SUDO_USER}/.rnd
+touch /home/${SFTP_USER}/.rnd
+
+## generate self-signed OpenSSL certificate ##
+if [[ -n "$CSR_COUNTRY" ]] && [[ -n "$CSR_STATE" ]] && [[ -n "$CSR_CITY" ]] && [[ -n "$CSR_COMPANY" ]] && [[ -n "$CSR_DEPT" ]]; then 
+    openssl req -new -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/nginx.key -out /etc/ssl/nginx.crt -subj "/C=${CSR_COUNTRY}/ST=${CSR_STATE}/L=${CSR_CITY}/O=${CSR_COMPANY}/OU=${CSR_DEPT}/CN=${SITE_DOMAIN}"
+else 
+    openssl req -new -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/ssl/nginx.key -out /etc/ssl/nginx.crt -subj "/C=US/ST=Nevada/L=Las Vegas/O=Example, LLC/OU=DevOps/CN=${SITE_DOMAIN}"
+fi
+
+####################################################################################################
+#### SS-Encrypt: (Re)configure Nginx (Prepare For Certbot Verification) ############################
+####################################################################################################
+
+## here we need to check if:
+# Lets Encrypt certs do not exist (or wrong based on current ss-config multisite/domain) then
+# revert Nginx config to OpenSSL now to allow for Certbot verify domain again
+# or if Lets Encrypt 
+
+## restart Nginx ##
+/etc/init.d/nginx restart
+
+####################################################################################################
+#### Cerbot: Reminder To Activate CloudFlare (15 Minute Pause For Virgin Installs) #################
+####################################################################################################
+
+## pause if no Certbot certs exist yet ##
+# if [[ "$SSL_TYPE" == "certbot" ]] && [[ ! -f "/etc/ssl/cert.pem" ]]; then
+ #   echo -e "\e[36m♬♬♬ **ELEVATOR MUSIC** ♬♬♬ ... This looks to be a virgin Cerbot installation, so we will now attempt to generate your very first Lets Encrypt SSL certificate for this domain using their Certbot API. However, for Certbot to verify correctly, your domain needs to fully resolve to this server's IP address over HTTPS, and must have CloudFlare activated before proceeding (in order to CA-sign the OpenSSL certificate)... so if you haven't done this yet, hurry up and activate CloudFlare on this domain right now (be sure to choose 'Full SSL' under the Crypto tab) and then come back here and push any key to proceed...\e[0m"
+ #   for (( i=900; i>0; i--)); do
+ #       read -s -n 1 -t 1 key
+  #      if [ $? -eq 0 ]; then
+   #         break
+    #    fi
+     #   echo -ne "\r$i\033[0K"
+  #  done
+# fi
+
+####################################################################################################
+#### SS-Encrypt: Generate DH Parameters (Used By Certbot Only) #####################################
+####################################################################################################
+
+## delete existing DH Params certificate ##
+# rm /etc/ssl/dhparam.pem ## reuse existing DH Params (takes a long time to regenerate)
+
+if [[ "$SSL_TYPE" == "certbot" ]] && [[ ! -f "/etc/ssl/dhparam.pem" ]]; then 
+    openssl dhparam -out /etc/ssl/dhparam.pem 2048
+fi
+
+####################################################################################################
+#### SS-Encrypt: Prepare Public Challenge Directory + Reset Permissions ############################
+####################################################################################################
+
+## ensure public challenge directory exists ##
+mkdir /var/www/html/.well-known
+mkdir /var/www/html/.well-known/acme-challenge
+
+## reset permissions (ensure that SFTP user can access if needed for e.g. Stripe, etc) ##
+chown -R $SFTP_USER:www-data /var/www/html/.well-known
+chmod 6775 /var/www/html/.well-known
+
+####################################################################################################
+#### SS-Encrypt: Delete Previous / Conflicting Lets Encrypt SSL Certificates #######################
+####################################################################################################
+
+## delete existing Lets Encrypt certificates (and keys) ##
+rm /etc/ssl/cert.pem ## symlink
+rm /etc/ssl/chain.pem ## symlink
+rm /etc/ssl/fullchain.pem ## symlink
+rm /etc/ssl/privkey.pem ## symlink
+rm /etc/letsencrypt/live/${SITE_DOMAIN}/cert.pem
+rm /etc/letsencrypt/live/${SITE_DOMAIN}/chain.pem
+rm /etc/letsencrypt/live/${SITE_DOMAIN}/fullchain.pem
+rm /etc/letsencrypt/live/${SITE_DOMAIN}/privkey.pem
+
+rm /etc/letsencrypt/live/*
+
+####################################################################################################
+#### SS-Encrypt: Prepare Domain Variables + (Re)generate Lets Encrypt SSL Certificates #############
+####################################################################################################
+
+## for stability reasons SimpleStack deletes old Lets Encrypt certs and requests new certs ##
+## this approach supports changing from WP single site to Multisite installs (etc) ##
+
+## SINGLE SITE CERTS + EMAIL ALERTS ##
+
+## not a subdomain + contains www + email alerts ##
+if [[ "$SSL_EMAIL_ALERTS" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN == *www.* ]]; then
+    SITE_DOMAIN_ONE="${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN}"
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d ${SITE_DOMAIN_ONE} -d ${SITE_DOMAIN_TWO} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## not a subdomain + does not contain www + email alerts ##
+elif [[ "$SSL_EMAIL_ALERTS" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN != *www.* ]]; then
+    SITE_DOMAIN_ONE="${SITE_DOMAIN}"
+    SITE_DOMAIN_TWO="www.${SITE_DOMAIN}"
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d ${SITE_DOMAIN_ONE} -d ${SITE_DOMAIN_TWO} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## subdomain (www is irrelevant) + email alerts ##
+elif [[ "$SSL_EMAIL_ALERTS" == "true" ]] && [[ $SITE_DOMAIN == *.*.* ]]; then
+    certbot delete --cert-name ${SITE_TLD}
+    certbot delete --cert-name ${SITE_DOMAIN}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_DOMAIN} -d ${SITE_DOMAIN} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## SINGLE SITE CERTS + NO EMAIL ALERTS ##
+
+## not a subdomain + contains www + no email alerts (or missing) ##
+elif [[ "$SSL_EMAIL_ALERTS" != "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN == *www.* ]]; then
+    SITE_DOMAIN_ONE="${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN}"
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d ${SITE_DOMAIN_ONE} -d ${SITE_DOMAIN_TWO} --register-unsafely-without-email --webroot -w /var/www/html/
+
+## not a subdomain + does not contain www + no email alerts (or missing) ##
+elif [[ "$SSL_EMAIL_ALERTS" != "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN != *www.* ]]; then
+    SITE_DOMAIN_ONE="${SITE_DOMAIN}"
+    SITE_DOMAIN_TWO="www.${SITE_DOMAIN}"
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d ${SITE_DOMAIN_ONE} -d ${SITE_DOMAIN_TWO} --register-unsafely-without-email --webroot -w /var/www/html/
+
+## subdomain (www is irrelevant) + no email alerts (or missing)  ##
+elif [[ "$SSL_EMAIL_ALERTS" != "true" ]] && [[ $SITE_DOMAIN == *.*.* ]]; then
+    certbot delete --cert-name ${SITE_TLD}
+    certbot delete --cert-name ${SITE_DOMAIN}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_DOMAIN} -d ${SITE_DOMAIN} --register-unsafely-without-email --webroot -w /var/www/html/
+
+## MULTISITE NETWORK (SUBDOMAINS) CERTS + EMAIL ALERTS ##
+
+## multisite (subdomains) + main site not a subdomain + main site contains www + email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN == *www.* ]] && [[ "$SSL_EMAIL_ALERTS" == "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN//$www./}"
+    ## request certs for *.example.com (supports www + subsites) and example.com ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## multisite (subdomains) + main site not a subdomain + main site does not contain www + email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN != *www.* ]] && [[ "$SSL_EMAIL_ALERTS" == "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN//$www./}"
+    ## request certs for *.example.com and example.com (same result as above) ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## multisite (subdomains) + main site is a subdomain (www is irrelevant) + email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN == *.*.* ]] && [[ "$SSL_EMAIL_ALERTS" == "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN}"
+    ## request certs for *.sub.example.com and sub.example.com ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} -m ${SSL_EMAIL} --webroot -w /var/www/html/
+
+## MULTISITE NETWORK (SUBDOMAINS) CERTS + NO EMAIL ALERTS ##
+
+## multisite (subdomains) + main site not a subdomain + main site contains www + no email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN == *www.* ]] && [[ "$SSL_EMAIL_ALERTS" != "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN//$www./}"
+    ## request certs for *.example.com (supports www + subsites) and example.com ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} --register-unsafely-without-email --webroot -w /var/www/html/
+
+## multisite (subdomains) + main site not a subdomain + main site does not contain www + no email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN != *.*.* ]] && [[ $SITE_DOMAIN != *www.* ]] && [[ "$SSL_EMAIL_ALERTS" != "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN//$www./}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN//$www./}"
+    ## request certs for *.example.com and example.com (same result as above) ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} --register-unsafely-without-email --webroot -w /var/www/html/
+
+## multisite (subdomains) + main site is a subdomain (www is irrelevant) + email alerts ##
+elif [[ "$WP_MULTISITE" == "true" ]] && [[ $SITE_DOMAIN == *.*.* ]] && [[ "$SSL_EMAIL_ALERTS" != "true" ]]; then
+    SITE_DOMAIN_ONE="*.${SITE_DOMAIN}"
+    SITE_DOMAIN_TWO="${SITE_DOMAIN}"
+    ## request certs for *.sub.example.com and sub.example.com ##
+    ## wildcard domain should be contained within quotes ##
+    certbot delete --cert-name ${SITE_TLD}
+    certbot certonly --noninteractive --agree-tos --cert-name ${SITE_TLD} -d "${SITE_DOMAIN_ONE}" -d ${SITE_DOMAIN_TWO} --register-unsafely-without-email --webroot -w /var/www/html/
+
+
+## MULTISITE NETWORK (SUBDIRECTORIES) CERTS + EMAIL ALERTS ##
+
+## MULTISITE NETWORK (SUBDIRECTORIES) CERTS + NO EMAIL ALERTS ##
+
+
+## otherwise just do this ##
+else
+    certbot certonly --noninteractive --agree-tos --expand --register-unsafely-without-email -d ${SITE_DOMAIN} --webroot -w /var/www/html/
+fi
+
+####################################################################################################
+#### SS-Encrypt: Create Certbot Symlinks + Modify Nginx Configuration ##############################
+####################################################################################################
+
+## create symlinks for simpler Nginx config ##
+ln /etc/letsencrypt/live/${SITE_DOMAIN}/cert.pem /etc/ssl/cert.pem &> /dev/null
+ln /etc/letsencrypt/live/${SITE_DOMAIN}/privkey.pem /etc/ssl/privkey.pem &> /dev/null
+ln /etc/letsencrypt/live/${SITE_DOMAIN}/chain.pem /etc/ssl/chain.pem &> /dev/null
+ln /etc/letsencrypt/live/${SITE_DOMAIN}/fullchain.pem /etc/ssl/fullchain.pem &> /dev/null
+## need to add more complex rules for SITE_TLD symlinks too (depends on how the certs were generated above) ##
+
+## modify live Nginx configuration if Certbot successful + preferred ##
+# if [[ "$SSL_TYPE" == "certbot" ]] && [[ -d  "/etc/letsencrypt/live" ]] && [[ -f  "/etc/ssl/cert.pem" ]]; then
+if [[ "$SSL_TYPE" == "certbot" ]] && [[ -d  "/etc/letsencrypt/live" ]]; then
+    sed -i "s#/etc/ssl/nginx.crt#/etc/ssl/fullchain.pem#g" /etc/nginx/nginx.conf
+    sed -i "s#/etc/ssl/nginx.key#/etc/ssl/privkey.pem#g" /etc/nginx/nginx.conf
+    sed -i "s/#@CERTBOT# //g" /etc/nginx/nginx.conf
+else
+    echo -e "\e[36mCertbot installation was not successful, reverting to OpenSSL...\e[0m"
+fi
+
+####################################################################################################
+#### SS-Encrypt: Reset Permissions (OpenSSL + Certbot) #############################################
+####################################################################################################
+
+## reset permissions ##
+chown root:root /etc/ssl/*.key
+chown root:root /etc/ssl/*.crt
+chown root:root /etc/ssl/*.pem
+
+####################################################################################################
+#### SS-Encrypt: Restart Nginx (After Certbot SSL Installation Complete) ###########################
+####################################################################################################
+
+## restart nginx ##
+/etc/init.d/nginx restart
+
+####################################################################################################
+#### SS-Encrypt: SUCCESS MESSAGE ###################################################################
+####################################################################################################
+
+echo -e "\e[36mSSL certificates have been successfully generated...\e[0m"
+
+if [[ $SITE_DOMAIN = *.*.*.* ]]; then
+    echo -e "\e[36mIt appears your domain is a sub-subdomain so Cloudflare free SSL will not work (you must upgrade to Cloudflare premium SSL, otherwise change to use Lets Encrypt on this server)...\e[0m"
+fi
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: https://linuxize.com/post/secure-apache-with-let-s-encrypt-on-ubuntu-18-04/
+## Ref: https://stackoverflow.com/questions/49172841/install-certbot-letsencrypt-without-interaction/57019299#57019299
+## Ref: https://matthewlehner.net/lets-encrypt-with-nginx
+## Ref: https://community.letsencrypt.org/t/how-often-should-i-run-the-cerbot-cron-job-to-update-the-certificates/18851
+## Ref: https://community.letsencrypt.org/t/how-to-get-crt-and-key-files-from-i-just-have-pem-files/7348/2
+## Ref: https://community.letsencrypt.org/t/certificate-path/24227
+## Ref: https://www.cyberciti.biz/tips/linux-unix-pause-command.html
+## Ref: https://stackoverflow.com/questions/9483633/how-to-use-bash-read-with-a-timeout/9483693#9483693
+## Ref: https://stackoverflow.com/questions/229551/how-to-check-if-a-string-contains-a-substring-in-bash
+## Ref: https://unix.stackexchange.com/questions/311758/remove-specific-word-in-variable
+## Ref: https://stackoverflow.com/questions/13210880/replace-one-substring-for-another-string-in-shell-script
+## Ref: https://github.com/certbot/certbot/issues/3039
+## Ref: https://superuser.com/questions/1056183/using-a-wildcard-in-a-condition-to-match-the-beginning-of-a-string
+## Ref: https://stackoverflow.com/questions/18730509/bash-substring-regex-matching-wildcard
+## Ref: https://linuxize.com/post/how-to-create-symbolic-links-in-linux-using-the-ln-command/
+## Ref: https://superuser.com/questions/81164/why-create-a-link-like-this-ln-nsf/81168
+## Ref: https://support.cloudflare.com/hc/en-us/articles/214820528-Validating-a-Let-s-Encrypt-Certificate-on-a-Site-Already-Active-on-Cloudflare
+## Ref: https://serverfault.com/questions/788220/lets-encrypt-certbot-validation-over-https
+## Ref: https://certbot-dns-cloudflare.readthedocs.io/en/stable/
+## Ref: https://dev.to/michaeldscherr/lets-encrypt-ssl-certificate-via-dns-challenge-8dd
+## Ref: https://letsencrypt.org/docs/challenge-types/
+## Ref: https://serverfault.com/questions/750902/how-to-use-lets-encrypt-dns-challenge-validation
+## Ref: https://community.letsencrypt.org/t/do-i-need-copy-dhparam-pem-file-when-i-move-certificates-to-a-new-server/47346
+## Ref: https://weakdh.org/sysadmin.html
+## Ref: https://security.stackexchange.com/questions/38206/can-someone-explain-what-exactly-is-accomplished-by-generation-of-dh-parameters
+## Ref: https://security.stackexchange.com/questions/94390/whats-the-purpose-of-dh-parameters
+## Ref: https://wiki.mozilla.org/Security/Server_Side_TLS
+## Ref: https://stackoverflow.com/questions/21251714/bash-script-countdown-timer-needs-to-detect-any-key-to-continue
+## Ref: https://stackoverflow.com/questions/33614865/bash-countdown-to-execution-if-no-key-pressed
+## Ref: https://unix.stackexchange.com/questions/293940/bash-how-can-i-make-press-any-key-to-continue
+## Ref: https://serverfault.com/questions/532559/bash-script-count-down-5-minutes-display-on-single-line
+## Ref: https://community.letsencrypt.org/t/confusing-on-root-domain-with-wildcard-cert/56113/2
+## Ref: https://gist.github.com/joepie91/7e5cad8c0726fd6a5e90360a754fc568
+## Ref: https://ma.ttias.be/how-to-read-ssl-certificate-info-from-the-cli/
+## Ref: http://nginx.org/en/docs/http/configuring_https_servers.html#certificate_with_several_names
+## Ref: https://dev.to/nabbisen/let-s-encrypt-wildcard-certificate-with-certbot-plo
+## Ref: https://community.letsencrypt.org/t/wildcard-certificate-does-not-work/79041
+## Ref: https://letsencrypt.org/docs/rate-limits/
+## Ref: https://github.com/certbot/certbot/issues/2071
+## Ref: https://community.letsencrypt.org/t/how-to-prevent-creation-of-etc-letsencrypt-live-domain-tld-0001-when-removing-domains-from-a-domain-tld-multidomain-certificate/8135/14
+## Ref: https://community.letsencrypt.org/t/letsencrypt-webroot-verification-follows-http-to-https-redirect-for-self-signed-cert/19917

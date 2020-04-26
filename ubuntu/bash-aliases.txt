@@ -1,0 +1,53 @@
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ubuntu/bash-aliases.txt #######################
+#### path: /var/www/meta/.bash-aliases #############################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Bash aliases configuration file for SimpleStack 'ss' command + WP-CLI includes ########
+#### ss version: SimpleStack alpha ss6f #############################################################
+#### module version: Ubuntu 20.04 ##################################################################
+####################################################################################################
+
+## BASH ALIASES USING THE 'SS' COMMAND ARE DIFFERENT THAN WP-CLI BASH COMPLETION ##
+
+# EDITOR="vim"
+
+####################################################################################################
+#### SimpleStack Bash Aliases Settings ##############################################################
+####################################################################################################
+
+# alias sscheck="sudo bash /var/www/ss-check"
+
+## SimpleStack aliases (e.g. 'ss check' will run 'sudo bash /var/www/ss-check') ##
+function ss { 
+  sudo bash /var/www/ss-"$@"; 
+}
+
+####################################################################################################
+#### Include WP-CLI Bash Completion File (Enables 'wp' Bash Command Completion) ####################
+####################################################################################################
+
+## set WP-CLI variables ##
+WP_CLI_CACHE_DIR="/var/www/cache/.wp-cli"
+WP_CLI_CONFIG_PATH="/var/www/meta/wp-cli.yml"
+WP_CLI_CUSTOM_SHELL="/bin/bash"
+WP_CLI_DISABLE_AUTO_CHECK_UPDATE="true"
+WP_CLI_PACKAGES_DIR="/tmp"
+# WP_CLI_PHP=""
+# WP_CLI_PHP_ARGS=""
+# WP_CLI_SSH_PRE_CMD=""
+WP_CLI_STRICT_ARGS_MODE="false"
+
+## include WP-CLI aliases ##
+source /var/www/meta/.wp-completion
+
+####################################################################################################
+#### External References Used By SimpleStack To Improve This Script #################################
+####################################################################################################
+
+## Ref: https://linuxize.com/post/bash-functions/
+## Ref: https://askubuntu.com/a/606882/935172
+## Ref: https://unix.stackexchange.com/a/247125/353848
+## Ref: https://ceaksan.com/tr/wp-cli-config-komutu-ve-islemleri/
+## Ref: https://github.com/greenpeace/planet4-docker/blob/master/src/planet-4-151612/wordpress/Dockerfile

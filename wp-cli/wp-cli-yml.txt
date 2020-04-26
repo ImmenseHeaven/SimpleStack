@@ -1,0 +1,49 @@
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/wp-cli/wp-cli-yml.txt #########################
+#### path: /var/www/meta/wp-cli.yml ################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: WP-CLI configuration file (disables commands that conflict with SimpleStack) #########
+#### module version: WP-CLI 2.4.0 ##################################################################
+####################################################################################################
+
+## IN GENERAL WE RECOMMEND USING SIMPLESTACK SCRIPTS INSTEAD OF WP-CLI WHEN POSSIBLE ##
+
+####################################################################################################
+#### WP-CLI: Disabled Commands Settings (Optimized For SimpleStack) #################################
+####################################################################################################
+
+## global variables for WP-CLI are defined in /var/www/meta/.bash-aliases for sudo users ##
+## several common WP-CLI commands are disabled in SimpleStack to avoid conflicts ##
+
+path: /var/www/html
+disabled_commands:
+  - cli
+  - config
+  - core
+  - db cli
+  - db create
+  - db drop
+  - db prefix
+  - db reset
+  - embed
+  - eval
+  - eval-file
+  - network
+  - option
+  - package
+  - plugin install
+  - rewrite
+  - server
+  - shell
+  - site
+  - super-admin
+
+####################################################################################################
+#### External References Used By SimpleStack To Improve This Script ################################
+####################################################################################################
+
+## Ref: https://blog.runcloud.io/2018/02/01/introducing-wp-cli.html
+## Ref: https://make.wordpress.org/cli/handbook/config/
+## Ref: https://wordpress-errors.info/wordpress-error-debug/

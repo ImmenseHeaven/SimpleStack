@@ -1,0 +1,277 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-perms.txt ##################################
+#### path: /var/www/ss-perms #######################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Resets all file and user permissions across the entire SimpleStack server ############
+#### module version: Ubuntu 20.04 LTS + WordPress 5.3.x ############################################
+####################################################################################################
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Perms: Reset Ubuntu (System Files + Users + Groups) Permissions ############################
+####################################################################################################
+
+## MESSAGE ##
+echo -e "\e[36mResetting all file permissions across entire SimpleStack server...\e[0m"
+
+## Ubuntu system files ##
+chown root:root /etc/ssh/sshd_config &> /dev/null
+chown root:root /etc/sudoers &> /dev/null
+chown root:root /var/spool/cron/crontabs/root &> /dev/null
+chown root:root /etc/sysctl.conf &> /dev/null
+chmod 0440 /etc/ssh/sshd_config &> /dev/null
+chmod 0440 /etc/sudoers &> /dev/null
+chmod 0600 /var/spool/cron/crontabs/root &> /dev/null
+chmod 0664 /etc/sysctl.conf &> /dev/null
+
+## create wordpress group if does not exist and various SimpleStack users/groups ##
+addgroup wordpress &> /dev/null
+adduser $user wordpress &> /dev/null ## deprecated soon
+adduser $SFTP_USER wordpress &> /dev/null
+adduser $SFTP_USER www-data &> /dev/null
+adduser www-data wordpress &> /dev/null
+
+####################################################################################################
+#### SS-Perms: Reset SimpleStack Core Files Permissions #############################################
+####################################################################################################
+
+## SimpleStack Core bash scripts and cron jobs are still executable by root regardless ##
+## but these permissions help ensure consistency and better overall security ##
+
+## ensure directories exist (will not overwrite) ##
+mkdir /var/www
+mkdir /var/www/cache
+mkdir /var/www/cache/opcache
+mkdir /var/www/logs
+mkdir /var/www/meta
+
+## ensure files exist ##
+if [ ! -f "/var/www/wp.sql" ]; then touch "/var/www/wp.sql"; fi
+
+## chroot (SFTP) user directory ##
+chown root:root /var &> /dev/null ## must be root:root
+chown root:root /var/www &> /dev/null ## must be root:root
+chmod 0755 /var/www &> /dev/null ## must be 0755
+
+## SimpleStack core scripts ##
+chown root:root /var/www/*cron* &> /dev/null ## must be root:root
+chown root:root /var/www/ss* &> /dev/null ## must be root:root
+chmod 6770 /var/www/*cron* &> /dev/null ## 4700 should also work
+chmod 6770 /var/www/ss* &> /dev/null ## 4700 should also work
+chmod 0700 /var/www/ss-config &> /dev/null
+
+## SQL dump file (we want SFTP users to be able to access) ##
+# chown www-data:www-data /var/www/wp.sql &> /dev/null ## root:root should also work
+# chmod 6770 /var/www/wp.sql &> /dev/null
+chown -R $SFTP_USER:www-data /var/www/wp.sql
+chmod 6775 /var/www/wp.sql
+
+## its okay if the SFTP user accesses this stuff (but www-data access is the priority) ##
+chown www-data:www-data /var/www/cache &> /dev/null ## must be www-data:www-data
+chown www-data:www-data /var/www/cache/opcache &> /dev/null ## must be www-data:www-data
+chown www-data:www-data /var/www/logs &> /dev/null ## must be www-data:www-data
+chown www-data:www-data /var/www/meta &> /dev/null ## must be www-data:www-data
+chmod 6775 /var/www/cache &> /dev/null ## 6755 should also work
+chmod 6775 /var/www/cache/opcache &> /dev/null ## 6755 should also work
+chmod 6775 /var/www/logs &> /dev/null ## 6755 should also work
+chmod 6775 /var/www/meta &> /dev/null ## 6755 should also work
+
+## ensure log files exist ##
+if [ ! -f "/var/www/logs/clamav.log" ]; then touch "/var/www/logs/clamav.log"; fi
+if [ ! -f "/var/www/logs/error.log" ]; then touch "/var/www/logs/error.log"; fi
+if [ ! -f "/var/www/logs/mysql.log" ]; then touch "/var/www/logs/mysql.log"; fi
+if [ ! -f "/var/www/logs/nginx.log" ]; then touch "/var/www/logs/nginx.log"; fi
+if [ ! -f "/var/www/logs/redis.log" ]; then touch "/var/www/logs/redis.log"; fi
+
+## individual log files ##
+chown clamav:clamav /var/www/logs/clamav*.log* &> /dev/null
+chown www-data:www-data /var/www/logs/error*.log* &> /dev/null
+chown mysql:mysql /var/www/logs/mysql*.log* &> /dev/null
+chown www-data:www-data /var/www/logs/nginx*.log* &> /dev/null
+chown redis:redis /var/www/logs/redis*.log* &> /dev/null
+
+####################################################################################################
+#### SS-Perms: Reset Public HTML Directory Permissions (WordPress) #################################
+####################################################################################################
+
+## ensure directories exist (will not overwrite) ##
+mkdir /var/www/html
+mkdir /var/www/html/.well-known
+mkdir /var/www/html/.well-known/acme-challenge
+mkdir /var/www/html/wp-admin
+mkdir /var/www/html/wp-content
+mkdir /var/www/html/wp-content/languages
+mkdir /var/www/html/wp-content/mu-plugins
+mkdir /var/www/html/wp-content/temp
+mkdir /var/www/html/wp-content/uploads
+mkdir /var/www/html/wp-content/upgrade
+mkdir /var/www/html/wp-includes
+
+## ensure files exist ##
+if [ ! -f "/var/www/html/wp-content/blacklist.txt" ]; then touch "/var/www/html/wp-content/blacklist.txt"; fi
+if [ ! -f "/var/www/html/wp-content/functions.php" ]; then touch "/var/www/html/wp-content/functions.php"; fi
+
+## public files ##
+chown -R $SFTP_USER:wordpress /var/www/html
+
+# chown -R www-data:wordpress /var/www/html/wp-content/temp
+# chown -R www-data:wordpress /var/www/html/wp-content/mu-plugins
+# chown -R www-data:wordpress /var/www/html/wp-content/uploads
+chmod 6775 /var/www/html &> /dev/null
+find /var/www/html/ -type d -exec chmod 6775 {} \;
+
+## reset file permissions ##
+# chown www-data:www-data /var/www/html/wp-content/blacklist.txt
+# chown www-data:www-data /var/www/html/wp-content/object-cache.php
+# chown www-data:www-data /var/www/html/wp-content/functions.php
+# find /var/www/html/ -type f -not -path "*var/www/html/wp-content/uploads*" -exec chmod 6664 {} \;
+# find /var/www/html/wp-content/uploads/ -not -name "*.jpg" -not -name "*.jpeg" -not -name "*.png" -not -name "*.bmp" -not -name "*.webp" -not -name "*.gif" -not -name "*.tiff" -not -name "*.mp4" -not -name "*.vid" -type f -exec chmod 0664 {} \;
+
+find /var/www/html/ -type f -exec chmod 6664 {} \;
+
+chmod 0660 /var/www/html/wp-config.php
+chmod 0440 /var/www/html/wp-content/blacklist.txt
+# chmod 6664 /var/www/html/wp-content/object-cache.php
+# chmod 6664 /var/www/html/wp-content/functions.php
+
+## this folder used by server for e.g. Cerbot but also SFTP for things like Stripe ##
+chown -R $SFTP_USER:www-data /var/www/html/.well-known
+chmod 6775 /var/www/html/.well-known
+
+####################################################################################################
+#### Reset Permissions: SimpleStack (LEMP) Modules ##################################################
+####################################################################################################
+
+mkdir /var/run/mysqld
+mkdir /var/run/php
+mkdir /var/run/redis
+
+## ensure files exist ##
+if [ ! -f "/etc/ssl/nginx.crt" ]; then touch "/etc/ssl/nginx.crt"; fi
+if [ ! -f "/etc/ssl/nginx.key" ]; then touch "/etc/ssl/nginx.key"; fi
+if [ ! -f "/etc/ssl/nginx.pem" ]; then touch "/etc/ssl/nginx.pem"; fi
+
+chown root:root /etc/nginx/nginx.conf &> /dev/null
+chown root:root /etc/nginx/fastcgi.conf &> /dev/null
+chown root:root /etc/ssl/nginx.crt &> /dev/null
+chmod -R 700 /etc/ssl/nginx.crt &> /dev/null
+chown root:root /etc/ssl/nginx.key &> /dev/null
+chmod -R 700 /etc/ssl/nginx.key &> /dev/null
+chown root:root /etc/ssl/nginx.pem &> /dev/null
+chmod -R 700 /etc/ssl/nginx.pem &> /dev/null
+
+## reset MySQL permissions ##
+chown mysql:mysql /var/run/mysqld
+chown root:root /etc/mysql/my.cnf
+chown root:root /etc/mysql/mysql.cnf
+chown root:root /etc/mysql/mysql.conf.d/mysqld.cnf
+chmod 0775 /etc/mysql/my.cnf
+
+## always run WP-CLI as the www-data user (and allow SFTP user to run it) ##
+chown root:root /usr/local/bin/ &> /dev/null
+chown www-data:www-data /usr/local/bin/wp &> /dev/null
+chmod 6775 /usr/local/bin/wp &> /dev/null
+
+# chown www-data:www-data /var/run/php
+chown root:root /etc/php/7.2/fpm/php.ini &> /dev/null
+chown root:root /etc/php/7.2/fpm/php-fpm.conf &> /dev/null
+chown root:root /etc/php/7.2/cli/php.ini &> /dev/null
+
+chown redis:redis /var/run/redis &> /dev/null
+chown redis:redis /etc/redis/redis.conf &> /dev/null
+
+####################################################################################################
+#### Convert DOS Files To Unix Files (Requires Dos2Unix To Be Installed) ###########################
+####################################################################################################
+
+## might take a really long time if many files ##
+if [[ "$SS_DOS2UNIX" == "true" ]]; then 
+    find /var/www/html/ -type f -exec dos2unix -k -o -s {} \;
+fi
+
+####################################################################################################
+#### SS-Perms: Flush Redis (Object Cache) ##########################################################
+####################################################################################################
+
+redis-cli flushall &> /dev/null
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
+####################################################################################################
+
+## Ref: https://unix.stackexchange.com/questions/203371/run-script-sh-vs-bash-script-sh-permission-denied/203372#203372
+## Ref: https://stackoverflow.com/questions/14372645/convert-dos2unix-line-endings-for-all-files-in-a-directory/19284034#19284034
+## Ref: https://stackoverflow.com/questions/11929461/how-can-i-run-dos2unix-on-an-entire-directory/11929475#11929475
+## Ref: https://unix.stackexchange.com/questions/310432/bash-script-to-convert-all-files-of-a-given-type-from-unix-to-dos-format/310437#310437
+## Ref: https://kb.iu.edu/d/acux
+## Ref: https://stackoverflow.com/questions/2613800/how-to-convert-dos-windows-newline-crlf-to-unix-newline-lf-in-a-bash-script
+## Ref: https://github.com/wp-cli/wp-cli/issues/3181
+## Ref: https://github.com/wp-cli/wp-cli/issues/1241
+## Ref: https://www.alexgeorgiou.gr/wp-cli-www-data-user-permissions-linux/
+## Ref: https://www.darklaunch.com/php-normalize-newlines-line-endings-crlf-cr-lf-unix-windows-mac
+## Ref: https://serverfault.com/questions/344544/what-is-the-first-digit-for-in-4-digit-octal-unix-file-permission-notation
+## Ref: https://unix.stackexchange.com/questions/79395/how-does-the-sticky-bit-work
+## Ref: https://superuser.com/questions/684213/why-are-execute-permissions-along-with-write-permissions-needed-for-creating-a-f
+## Ref: https://ubuntuforums.org/showthread.php?t=2383638
+## Ref: https://serverfault.com/questions/584986/bad-ownership-or-modes-for-chroot-directory-component
+## Ref: https://stackoverflow.com/questions/6851909/how-do-i-delete-everything-in-redis
+## Ref: https://serverfault.com/questions/888653/correct-web-user-for-php-fpm-under-nginx
+## Ref: https://askubuntu.com/questions/25681/can-scripts-run-even-when-they-are-not-set-as-executable
+## Ref: https://serverfault.com/questions/616788/nginx-403-forbidden-on-some-files-extensions
+## Ref: https://serverfault.com/questions/686357/unable-to-open-jpeg-files-with-nginx

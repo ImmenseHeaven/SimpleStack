@@ -1,0 +1,103 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-dump.txt ###################################
+#### path: /var/www/ss-dump ########################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Dumps the live MySQL database to /var/www/wp.sql (the SFTP user can access) ##########
+#### module version: Ubuntu 20.04 LTS + MySQL 8.0.x ################################################
+####################################################################################################
+
+## KEEP IN MIND THAT SS-DUMP MIGHT ONLY FUNCTION PROPERLY ON LOCALHOST DATABASES ##
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work #########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Dump: Export The Live MySQL Database (mysqldump) ###########################################
+####################################################################################################
+
+## MESSAGE ##
+echo -e "\e[36mDumping the live MySQL database to /var/www/wp.sql...\e[0m" >&2
+
+## prepare MySQL root password (suppresses MySQL security warnings) ##
+export MYSQL_PWD=$DB_PASSWORD_ROOT
+
+## dump MySQL database to /var/www/wp.sql (overwrites) ##
+mysqldump --user=root --host="$DB_HOST" --protocol=tcp --port=3306 --dump-date --flush-privileges --force "$DB_NAME" > /var/www/wp.sql
+
+####################################################################################################
+#### SS-Dump: Reset Permissions (Allows SFTP User To Access The SQL Dump File) #####################
+####################################################################################################
+
+## reset permissions ##
+chown -R $SFTP_USER:www-data /var/www/wp.sql
+chmod 6775 /var/www/wp.sql
+
+####################################################################################################
+#### SS-Dump: SUCCESS (OR FAIL) MESSAGE ############################################################
+####################################################################################################
+
+## if = file exists + recent touch time + file contents not zero ##
+echo -e "\e[93mSUCCESS! The MySQL database was dumped to /var/www/wp.sql.\e[0m" >&2
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
+####################################################################################################
+
+## Ref: https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html
+## Ref: https://unix.stackexchange.com/questions/293966/suppress-warning-messages-from-mysql-in-shell-script-but-allow-errors
+## Ref: https://github.com/cytopia/devilbox/issues/212
+## Ref: https://stackoverflow.com/questions/32133353/unable-to-connect-to-mysql-database-in-ubuntu

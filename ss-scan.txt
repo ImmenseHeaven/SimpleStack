@@ -1,0 +1,86 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-scan.txt ###################################
+#### path: /var/www/ss-scan ########################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Scans the entire SimpleStack directory tree (only) for malware using ClamAV ##########
+#### module version: Ubuntu 20.04 LTS + ClamAV 0.101.x #############################################
+####################################################################################################
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Scan: Scan SimpleStack Directory Tree For Malware (Via ClamAV) #############################
+####################################################################################################
+
+## on average the ClamAV scanning process takes around 5-10 minutes on typical servers ##
+## verbose results are printed via CLI (also saved to /var/www/logs/clamav.log) ##
+
+## ensure ClamAV log file exists ##
+if [[ ! -f "/var/www/logs/clamav.log" ]]; then 
+    touch "/var/www/logs/clamav.log"
+    chown clamav:clamav /var/www/logs/clamav.log
+fi
+
+## scan SimpleStack directory tree (only) for common malware ##
+clamscan -ir /var/www -l /var/www/logs/clamav.log
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: 

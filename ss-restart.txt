@@ -1,0 +1,87 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-restart.txt ################################
+#### path: /var/www/ss-restart #####################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Restarts all of the SimpleStack LEMP module services (e.g. Ubuntu packages) ##########
+#### module version: Ubuntu 20.04 LTS ##############################################################
+####################################################################################################
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Restart: Forcefully Restart SimpleStack (LEMP) Modules #####################################
+####################################################################################################
+
+## unmask services ##
+# systemctl unmask mysql.service
+
+## restart all LEMP modules (services) ##
+/etc/init.d/redis-server restart
+/etc/init.d/php7.4-fpm restart
+/etc/init.d/nginx restart
+/etc/init.d/ufw force-reload
+/etc/init.d/ufw restart
+/etc/init.d/mysql restart
+/etc/init.d/clamav-freshclam restart
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: https://unix.stackexchange.com/questions/370942/do-you-need-to-reload-after-adding-a-rule-in-ufw/370947
+## Ref: http://blog.jonathanargentiero.com/failed-to-restart-mysql-service-unit-mysql-service-is-masked/
