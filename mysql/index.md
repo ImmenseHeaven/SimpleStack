@@ -6,7 +6,7 @@ title: MySQL (Public Mirrors)
 
 ----
 
-### Live Files (MySQL 5.7.x)
+### Live Files (MySQL 8.0.x)
 
 *Live configuration files and boilerplates used by current SimpleStack installation that may be altered by Wolong or Ubuntu for better performance.*
 
@@ -34,4 +34,4 @@ title: MySQL (Public Mirrors)
 
 ----
 
-*Last updated: Nov 18, 2019*
+*Last updated: Apr 28, 2020*
