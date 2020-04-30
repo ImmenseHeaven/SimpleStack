@@ -73,4 +73,4 @@ title: Ubuntu (Public Mirrors)
 
 ----
 
-*Last updated: Apr 28, 2020*
+*Last updated: Apr 30, 2020*
