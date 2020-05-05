@@ -60,7 +60,7 @@ SFTP_PASSWORD="password"
 #### SS-Config: WordPress Database Settings (Single Database Only) #################################
 ####################################################################################################
 
-## MODULE VERSION: WordPress 5.3.x + MySQL 5.7.x
+## MODULE VERSION: MySQL 8.0.x + WordPress 5.4.x 
 
 ## using a remote MySQL database has not been extensively tested (use at your own risk) ##
 ## for security reasons choose a different password for the MySQL root user ##
@@ -87,7 +87,7 @@ DB_COLLATE=""
 #### SS-Config: WordPress + Nginx Domain Settings (Subdirectories Not Allowed) #####################
 ####################################################################################################
 
-## MODULE VERSION: WordPress 5.3.x + Nginx 1.17.x
+## MODULE VERSION: Nginx 1.17.x + WordPress 5.4.x 
 
 ## below domain values are used in order to hardcode Nginx and WordPress configuration ##
 ## database domain settings will have no effect after the ss-install completes ##
@@ -104,7 +104,7 @@ SITE_NOINDEX="false"
 #### SS-Config: WordPress Multisite Settings (Subdomains Recommended) ##############################
 ####################################################################################################
 
-## MODULE VERSION: WordPress 5.3.x
+## MODULE VERSION: WordPress 5.4.x
 
 ## Multisite setups should not be used for high-traffic or business-critical websites ##
 ## domain mapping on Multisite installations requires the subdomains approach ##
@@ -155,10 +155,21 @@ CLOUDFLARE_WIDGET_DNS="true"
 #### SS-Config: Select WordPress Core (WP-Config) Settings #########################################
 ####################################################################################################
 
-## MODULE VERSION: WordPress 5.3.x
+## MODULE VERSION: WordPress 5.4.x
 
 ## for stability reasons several WP defined constants are hard-coded in the wp-config ##
 ## define additional constants using the included Custom Functions MU plugin ##
+
+## WP_LANG =
+## WP_POST_REVISIONS =
+## WP_AUTOSAVE_INTERVAL =
+## WP_HTTP_BLOCK_EXTERNAL =
+## WP_ACCESSIBLE_HOSTS =
+## WP_AUTO_UPDATE_CORE =
+## WP_DISALLOW_FILE_EDIT =
+## WP_DISALLOW_FILE_MODS =
+## WP_ALLOW_UNFILTERED_UPLOADS =
+
 
 WP_LANG="en-US"
 WP_POST_REVISIONS="3"
@@ -174,7 +185,7 @@ WP_ALLOW_UNFILTERED_UPLOADS="true"
 #### SS-Config: OpenSSL + Cerbot (Let's Encrypt) SSL Settings (CSR Optional) #######################
 ####################################################################################################
 
-## MODULE VERSION: OpenSSL 1.1.1 + Certbot 0.31.0
+## MODULE VERSION: OpenSSL 1.1.1x + Certbot 0.40.0
 
 ## we recommend OpenSSL because it is infinitely simpler and more reliable to maintain ##
 ## even if you choose Cerbot you will still need CloudFlare active during setup ##
@@ -306,7 +317,7 @@ FCGI_CACHE_TMPFS="false"
 #### SS-Config: MySQL + InnoDB Settings (Applies To Localhost Database Only) #######################
 ####################################################################################################
 
-## MODULE VERSION: MySQL 5.7.x
+## MODULE VERSION: MySQL 5.8.x
 
 ## there are very few settings that need to be optimized in MySQL after version 5.7+ ##
 ## probably the SQL_MODE is the only setting that you might consider changing ##
@@ -319,7 +330,7 @@ FCGI_CACHE_TMPFS="false"
 ## SQL_NET_READ_TIMEOUT = [30|60|etc] usually this should be fine at 30 seconds ##
 ## SQL_NET_WRITE_TIMEOUT = [30|60|etc] usually this should be fine at 60 seconds ##
 
-SQL_MODE="STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+SQL_MODE="STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION" 
 SQL_MAX_ALLOWED_PACKET="256M"
 SQL_CONNECT_TIMEOUT="30"
 SQL_WAIT_TIMEOUT="3600"
@@ -337,13 +348,13 @@ INNODB_BUFFER_POOL_SIZE="auto"
 INNODB_LOG_FILE_SIZE="256M"
 INNODB_LOG_FILES_IN_GROUP="1"
 INNODB_FLUSH_LOG_AT_TRX_COMMIT="true"
-INNODB_FLUSH_METHOD="O_DIRECT" ## MySQL 8.0 = O_DIRECT_NO_FSYNC
+INNODB_FLUSH_METHOD="O_DIRECT_NO_FSYNC"
 
 ####################################################################################################
 #### PHP-FPM: General PHP Settings (php.ini) #######################################################
 ####################################################################################################
 
-## MODULE VERSION: PHP-FPM 7.2.x
+## MODULE VERSION: PHP-FPM 7.4.x
 
 ## many well-known PHP settings are hardcoded to ensure server stability and security ##
 ## below settings can be modified before ss-install to customize PHP as needed ##
@@ -386,7 +397,7 @@ PHP_DEFAULT_SOCKET_TIMEOUT="60"
 #### PHP-FPM: FastCGI Process Manager Settings (php-fpm.conf) ######################################
 ####################################################################################################
 
-## MODULE VERSION: PHP-FPM 7.2.x
+## MODULE VERSION: PHP-FPM 7.4.x
 
 ## the vast majority of SimpleStack servers should not need to adjust any FPM settings ##
 ## in most cases the php.ini settings and www.conf settings are more relevant ##
@@ -413,7 +424,7 @@ FPM_SYSTEMD_INTERVAL="10"
 #### SS-Config: WWW Pool Settings ##################################################################
 ####################################################################################################
 
-## MODULE VERSION: PHP-FPM 7.2.x
+## MODULE VERSION: PHP-FPM 7.4.x
 
 ## modifying this tiny file can have drastic effects on scaling LEMP to high traffic ##
 ## ondemand is more efficient for most servers, be very careful tuning these ##
@@ -446,7 +457,7 @@ WWW_RLIMIT_CORE="0"
 #### SS-Config: OPcache Settings (Always Enabled On Production Servers) ############################
 ####################################################################################################
 
-## MODULE VERSION: PHP-FPM 7.2.x
+## MODULE VERSION: PHP-FPM 7.4.x
 
 ## OPcache is one of the most powerful (and underrated) ways to scale cheap VPS servers ##
 ## high traffic sites that understand how it works can adjust it with big results ##
@@ -470,8 +481,10 @@ OPCACHE_HUGE_CODE_PAGES="false"
 # etc
 
 ####################################################################################################
-#### SS-Config: General SimpleStack Settings #######################################################
+#### SS-Config: General SimpleStack Settings + Config Files Sources ################################
 ####################################################################################################
+
+## MODULE VERSION: Ubuntu 20.04 LTS 
 
 ## SS_APP = [wordpress] only WordPress currently supported (feedback? tell us!) ##
 ## SS_MU_PLUGINS = [default|custom] use default Wolong MU plugins or custom ones ##
@@ -487,6 +500,15 @@ SS_TIMEZONE="UTC"
 SS_REBOOT="false"
 SS_DOS2UNIX="false"
 # SS_CLEAN_PHP_HACKS="true"
+
+## MODULE VERSION: WordPress 5.4.x
+
+## for custom configuration use the below settings to define configuration file sources ##
+## source files must be publicly accessible via wget over either HTTP or HTTPS ##
+
+PLUGIN_BLACKLIST_SOURCE="http://mirrors.slickstack.io/wordpress/blacklist.txt"
+CUSTOM_FUNCTIONS_SOURCE="http://mirrors.slickstack.io/wordpress/functions.txt"
+THROWAWAY_THEME_SOURCE="http://mirrors.slickstack.io/wordpress/throwaway.zip"
 
 ####################################################################################################
 #### SS-Config: SimpleStack Core Cron Job Schedules (Interval Settings) ############################
@@ -518,23 +540,10 @@ SS_INTERVAL_ENCRYPT="never"
 SS_INTERVAL_UPDATE="never"
 
 ####################################################################################################
-#### SimpleStack: Custom Config File Sources #######################################################
-####################################################################################################
-
-## MODULE VERSION: WordPress 5.3.x
-
-## for custom configuration use the below settings to define configuration file sources ##
-## source files must be publicly accessible via wget over either HTTP or HTTPS ##
-
-PLUGIN_BLACKLIST_SOURCE="https://simplestack.git.supercluster.io/wordpress/blacklist.txt"
-CUSTOM_FUNCTIONS_SOURCE="https://simplestack.git.supercluster.io/wordpress/functions.txt"
-THROWAWAY_THEME_SOURCE="https://simplestack.git.supercluster.io/wordpress/throwaway.zip"
-
-####################################################################################################
 #### SS-Config: MU (Must-Use) WordPress Plugins (Custom List) ######################################
 ####################################################################################################
 
-## MODULE VERSION: WordPress 5.3.x
+## MODULE VERSION: WordPress 5.4.x
 
 ## activate this custom list of MU (Must-Use) plugins using the SS_MU_PLUGINS variable ##
 ## NOTE: Autoloader, Custom Functions, Object Cache, and XXX Notices are required ##
@@ -618,6 +627,8 @@ MU_PLUGIN_25_DIR="virtual-robotstxt"
 #### SS-Config: Included WordPress Plugins (Not MU Plugins) ########################################
 ####################################################################################################
 
+## MODULE VERSION: WordPress 5.4.x
+
 ## these plugins will be added to your WP website whenever ss-install or ss-update runs ##
 ## the activation status of these plugins will not be effected or modified (ever) ##
 
@@ -630,6 +641,8 @@ MU_PLUGIN_25_DIR="virtual-robotstxt"
 #### Included Themes + Default Active Theme ########################################################
 ####################################################################################################
 
+## MODULE VERSION: WordPress 5.4.x 
+
 ## these themes will be installed after Throwaway Theme setup completes (and is deleted) ##
 ## all default WordPress Core themes will be deleted (only below themes installed) ##
 
@@ -639,6 +652,8 @@ MU_PLUGIN_25_DIR="virtual-robotstxt"
 ####################################################################################################
 #### Superuser (MU Plugin): Various Settings #######################################################
 ####################################################################################################
+
+## MODULE VERSION: WordPress 5.4.x
 
 # SUPERUSER_LOGIN
 # SUPERUSER_PASSWORD
@@ -656,3 +671,5 @@ MU_PLUGIN_25_DIR="virtual-robotstxt"
 # mailalert="user@example.com"
 # MAIL_USER="example"
 # MAIL_PASSWORD="password"
+
+## EOF ##

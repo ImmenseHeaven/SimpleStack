@@ -37,7 +37,7 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 * **NEW!** SimpleStack now does `include_once` within wp-config.php on the Custom Functions (MU plugin) file `/var/www/html/wp-content/functions.php` meaning much more reliable PHP functions...
 
 
-*Last updated: Apr 26, 2020*
+*Last updated: May 2, 2020*
 
 *Default Ports: 80 (HTTP), 443 (HTTPS), 6969 (SSH)*
 
@@ -45,13 +45,13 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 | :------------- | :----------: | :----------: | :----------: |
 | **Ubuntu** | [mirrors](https://simplestack.git.supercluster.io/ubuntu/) | 20.04 (LTS) | `crontab` + `gai.conf` + `sshd_config` + `sudoers` + `sysctl.conf` |
 | **Nginx (Extras)** | [mirrors](https://simplestack.git.supercluster.io/nginx/) | 1.17.x | `nginx.conf` + `default` (server block) |
-| **FastCGI Cache** | [mirrors](https://simplestack.git.supercluster.io/fastcgi-cache/) | 1.17.x | `fastcgi-cache.conf` |
+| **FastCGI Cache** | [mirrors](https://simplestack.git.supercluster.io/fastcgi-cache/) | 1.17.x | `fastcgi-cache.conf` (moved to `nginx.conf`) |
 | **OpenSSL** | [mirrors](https://simplestack.git.supercluster.io/openssl/) | 1.1.1x | `nginx.crt` + `nginx.key` |
 | **Let's Encrypt** | [mirrors](https://simplestack.git.supercluster.io/letsencrypt/) | 0.31.0 | `cert.perm` + `privkey.pem` + `chain.pem` + `fullchain.pem` |
 | **MySQL** | [mirrors](https://simplestack.git.supercluster.io/mysql/) | 8.0.x | `my.cnf` |
 | **PHP-FPM** | [mirrors](https://simplestack.git.supercluster.io/php-fpm/) | 7.4.x | `php.ini` + `php-fpm.conf` + `www.conf` |
 | **Zend / OPcache** | [mirrors](https://simplestack.git.supercluster.io/opcache/) | 3.4.x / 7.4.x | (same as PHP-FPM) |
-| **WordPress** | [mirrors](https://simplestack.git.supercluster.io/wordpress/) | 5.3.2 | some WP Core junk files are removed by `ss-clean` |
+| **WordPress** | [mirrors](https://simplestack.git.supercluster.io/wordpress/) | 5.4.1 | some WP Core junk files are removed by `ss-clean` |
 | **MU Plugins** | [mirrors](https://simplestack.git.supercluster.io/mu-plugins/) | (n/a) | optional `mu-plugins` |
 | **WP-CLI** | [mirrors](https://simplestack.git.supercluster.io/wp-cli/) | 2.4.0 | default config |
 | **Redis (Obj Cache)** | [mirrors](https://simplestack.git.supercluster.io/redis/) | 5.0.x | `redis.conf` + `object-cache.php` |
