@@ -4,17 +4,16 @@
 #### mirror: https://simplestack.git.supercluster.io/ubuntu/bash-aliases.txt #######################
 #### path: /var/www/meta/.bash-aliases #############################################################
 #### destination: n/a (not a boilerplate) ##########################################################
-#### purpose: Bash aliases configuration file for SimpleStack 'ss' command + WP-CLI includes ########
-#### ss version: SimpleStack alpha ss6f #############################################################
+#### purpose: Bash aliases configuration file for SimpleStack [ss] command + WP-CLI includes #######
 #### module version: Ubuntu 20.04 ##################################################################
 ####################################################################################################
 
-## BASH ALIASES USING THE 'SS' COMMAND ARE DIFFERENT THAN WP-CLI BASH COMPLETION ##
+## BASH COMMAND ALIASES USING THE [SS] SHORTCUT ARE DIFFERENT THAN WP-CLI BASH COMPLETION ## 
 
 # EDITOR="vim"
 
 ####################################################################################################
-#### SimpleStack Bash Aliases Settings ##############################################################
+#### Bash Aliases: SimpleStack Bash Shortcut Commands Settings ###################################### 
 ####################################################################################################
 
 # alias sscheck="sudo bash /var/www/ss-check"
@@ -25,7 +24,7 @@ function ss {
 }
 
 ####################################################################################################
-#### Include WP-CLI Bash Completion File (Enables 'wp' Bash Command Completion) ####################
+#### Include WP-CLI Bash Completion File (Enables [wp] Bash Command Completion) #################### 
 ####################################################################################################
 
 ## set WP-CLI variables ##

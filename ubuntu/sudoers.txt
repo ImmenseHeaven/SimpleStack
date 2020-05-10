@@ -4,7 +4,7 @@
 #### mirror: https://simplestack.git.supercluster.io/ubuntu/sudoers.txt ############################
 #### path: n/a (boilerplate) #######################################################################
 #### destination: /etc/sudoers (after install) #####################################################
-#### purpose: Sudoers configuration file for sudo users (typically edited using Visudo) ############
+#### purpose: Sudoers configuration file boilerplate (typically configured using Visudo) ###########
 #### module version: Ubuntu 20.04 ##################################################################
 ####################################################################################################
 
@@ -23,31 +23,31 @@ Defaults    lecture="never"
 # Defaults    use_pty
 
 ####################################################################################################
-#### Root + Sudo User Privilege Specification ######################################################
+#### Sudoers: Root + Sudo User Privilege Specification ############################################# 
 ####################################################################################################
 
 root ALL=(ALL:ALL) ALL
 @SUDO_USER ALL=(ALL:ALL) ALL
 
 ####################################################################################################
-#### Custom Sudo Privileges (No Password Prompt) For SimpleStack + WP-CLI Scripts ##################
+#### Sudoers: Custom Sudo Privileges (e.g. No Password Prompts) For SimpleStack + WP-CLI ###########
 ####################################################################################################
 
 @SUDO_USER ALL=(ALL) NOPASSWD: /var/www/ss*
 @SUDO_USER ALL=(www-data) NOPASSWD: /usr/local/bin/wp
 
 ####################################################################################################
-#### Admin + Sudo Group Privilege Specification ####################################################
+#### Sudoers: Admin + Sudo Group Privilege Specification ###########################################
 ####################################################################################################
 
 %admin ALL=(ALL) ALL
 %sudo ALL=(ALL:ALL) ALL
 
 ####################################################################################################
-#### Include Other Sudoers Configuration Files (Not Supported By SimpleStack) ######################
+#### Sudoers: Include Other Sudoers Configuration Files (Not Supported) ############################
 ####################################################################################################
 
-## includedir /etc/sudoers.d
+#### includedir /etc/sudoers.d
 
 ####################################################################################################
 #### External References Used By SimpleStack To Improve This Script ################################

@@ -1,12 +1,15 @@
 ####################################################################################################
 #### author: SimpleStack ###########################################################################
 #### link: https://localhostdomain #################################################################
-#### mirror: https://simplestack.git.supercluster.io/ufw-firewall/user-rules.txt ####################
+#### mirror: https://simplestack.git.supercluster.io/ufw-firewall/user-rules.txt ###################
 #### path: n/a (boilerplate) #######################################################################
 #### destination: /etc/ufw/user.rules (after install) ##############################################
-#### purpose: UFW Firewall user rules configuration file (optimized for SimpleStack) ###############
+#### purpose: UFW user rules configuration file boilerplate (supports custom SSH port) #############
 #### module version: UFW Firewall 0.36 #############################################################
 ####################################################################################################
+
+## SIMPLESTACK ASSUMES THAT YOU ARE NOT ADDING CUSTOM UFW USER RULES VIA THE CLI (SHELL) ## 
+## CUSTOM USER RULES ADDED VIA CLI COMMANDS WILL NOT PERSIST AFTER UFW RESTARTS ## 
 
 *filter
 :ufw-user-input - [0:0]
