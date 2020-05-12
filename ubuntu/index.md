@@ -19,38 +19,37 @@ title: Ubuntu (Public Mirrors)
 * logrotate.txt
 * limits-conf.txt
 
-
 ### Original Files
 
 *Raw files from the vendor’s original release (e.g. official repo), not altered by other providers, included for reference and documentation purposes.*
 
 #### sshd_config
 
-* sshd-config-18.04.txt
+* sshd-config-20.04.txt
 * [sshd-config-18.04.txt](sshd-config-18.04.txt)
 * [sshd-config-16.04.txt](sshd-config-16.04.txt)
 
 #### sudoers
 
-* sudoers-18.04.txt
+* [sudoers-20.04.txt](sudoers-20.04.txt) 
 * [sudoers-18.04.txt](sudoers-18.04.txt)
 * [sudoers-16.04.txt](sudoers-16.04.txt)
 
 #### sysctl.conf
 
-* sysctl-conf-18.04.txt
+* [sysctl-conf-20.04.txt](sysctl-conf-20.04.txt) 
 * [sysctl-conf-18.04.txt](sysctl-conf-18.04.txt)
 * [sysctl-conf-16.04.txt](sysctl-conf-16.04.txt)
 
 #### gai.conf
 
-* gai-conf-18.04.txt
-* [gai-conf-18.04.txt](gai-conf-18.04.txt)
+ * [gai-conf-20.04.txt](gai-conf-20.04.txt) 
+ * [gai-conf-18.04.txt](gai-conf-18.04.txt)
 * [gai-conf-16.04.txt](gai-conf-16.04.txt)
 
 #### nanorc
 
-* nanorc-18.04.txt
+* nanorc-20.04.txt
 * [nanorc-18.04.txt](nanorc-18.04.txt)
 * [nanorc-16.04.txt](nanorc-16.04.txt)
 
@@ -73,4 +72,4 @@ title: Ubuntu (Public Mirrors)
 
 ----
 
-*Last updated: Apr 30, 2020*
+*Last updated: May 11, 2020*
