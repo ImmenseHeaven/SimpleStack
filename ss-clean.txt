@@ -6,7 +6,7 @@
 #### mirror: https://simplestack.git.supercluster.io/ss-clean.txt ##################################
 #### path: /var/www/ss-clean #######################################################################
 #### destination: n/a (not a boilerplate) ##########################################################
-#### purpose: Cleans up various unsafe or unnecessary files throughout the SimpleStack server ######
+#### purpose: Cleans up various unsafe and unnecessary files on the SimpleStack server #############
 #### module version: Ubuntu 20.04 LTS ##############################################################
 ####################################################################################################
 

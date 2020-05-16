@@ -7,7 +7,7 @@
 #### path: /var/www/3-cron-hourly ##################################################################
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: SimpleStack cron job *hourly* (3/9) will run every 1 hour ############################
-#### module version: Ubuntu 20.04 ##################################################################
+#### module version: Ubuntu 20.04 LTS ##############################################################
 ####################################################################################################
 
 ## !!! DO NOT MODIFY SIMPLESTACK CRONTAB OR CRON JOBS (ADD CUSTOM SCRIPTS TO SS-CUSTOM) ##
@@ -96,3 +96,10 @@ fi
 
 ## delete lock files ##
 rm /tmp/3-cron-hourly*.lock*
+
+
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: 
