@@ -68,6 +68,8 @@ function ln {
 ####################################################################################################
 
 ## backup ss-config file ##
+# WANTED: remove ss-config backups that are older than 48 hours
+# WANTED: append date/time to ss-config backup files
 cp /var/www/ss-config /var/ss-config.bak
 
 ####################################################################################################
@@ -185,6 +187,7 @@ rm -R -f /tmp/blacklist*
 ####################################################################################################
 
 ## Ref: https://linuxize.com/post/bash-functions/
+## Ref: https://www.cyberciti.biz/faq/unix-linux-appleosx-bsd-shell-appending-date-to-filename/
 
 ################
 #### SS_EOF ####
