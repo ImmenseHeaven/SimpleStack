@@ -4,6 +4,7 @@
 #### author: SimpleStack ###########################################################################
 #### link: https://localhostdomain #################################################################
 #### mirror: https://simplestack.git.supercluster.io/1-cron-often.txt  #############################
+#### path: /var/www/1-cron-often ###################################################################
 #### destination: n/a (not a boilerplate) ##########################################################
 #### purpose: SimpleStack cron job *often* (1/9) will run every 15 minutes #########################
 #### module version: Ubuntu 20.04 LTS ##############################################################
@@ -44,9 +45,9 @@ function cp {
     command cp -R -f -d --no-preserve=mode,ownership "$@"
 }
 
-## mkdir alias flags ##
-function mkdir {
-    command mkdir -p "$@"
+## rsync alias flags ##
+function rsync {
+    command rsync -aI "$@"
 }
 
 ## unzip alias flags ##
@@ -57,6 +58,11 @@ function unzip {
 ## rm alias flags ##
 function rm {
     command rm -R -f "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
 }
 
 ## ln alias flags ##
