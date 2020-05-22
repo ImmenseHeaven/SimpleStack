@@ -26,6 +26,7 @@ title: SimpleStack (Public Mirrors)
 * [ufw-firewall](/ufw-firewall/)
 * [clamav](/clamav/)
 * [git](/git/)
+* [adminer](/adminer/)
 
 ### Core Cron Jobs
 
@@ -51,6 +52,7 @@ title: SimpleStack (Public Mirrors)
 * [ss-config-sample.txt](ss-config-sample.txt)
 * [ss-dump.txt](ss-dump.txt)
 * [ss-encrypt.txt](ss-encrypt.txt)
+* [ss-import.txt](ss-import.txt)
 * [ss-install.txt](ss-install.txt)
 * [ss-muplugs.txt](ss-muplugs.txt)
 * [ss-perms.txt](ss-perms.txt)
@@ -70,4 +72,4 @@ title: SimpleStack (Public Mirrors)
 
 ----
 
-*Last updated: Dec 11, 2019*
+*Last updated: May 22, 2020*
