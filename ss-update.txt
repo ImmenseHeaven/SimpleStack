@@ -1558,11 +1558,47 @@ mysql -uroot -p${DB_PASSWORD_ROOT} -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '
 mysql --user=root --execute="FLUSH PRIVILEGES;"
 
 ####################################################################################################
-#### SS-Update: Update WP-Config (Via Boilerplate) #################################################
+#### SS-Update: Update WordPress Core + WP-Config To Latest Boilerplate ############################
 ####################################################################################################
 
-# coming soon
-# maybe should leave it to ss-install?
+## cleanup files ##
+rm /tmp/wordpress.zip*
+rm /var/www/html/wordpress*
+rm /var/www/html/staging/wordpress*
+
+## ensure directories exist ##
+mkdir /var/www/html
+mkdir /var/www/html/staging
+
+## brief permissions reset ##
+chown -R $SFTP_USER:wordpress /var/www/html
+chown -R $SFTP_USER:wordpress /var/www/html/staging
+chmod 6775 /var/www/html
+chmod 6775 /var/www/html/staging
+
+## download latest (patched) WordPress version ##
+wget -O /tmp/wordpress.zip https://simplestack.supercluster.io/wordpress/wordpress.zip
+
+## install WordPress to web directory ##
+cp /tmp/wordpress.zip /var/www/html
+unzip /var/www/html/wordpress.zip -d /var/www/html
+chown -R www-data:wordpress /var/www/html/wordpress
+chmod 775 /var/www/html/wordpress
+rsync /var/www/html/wordpress/* /var/www/html
+
+## install WordPress to staging subdirectory ##
+cp /tmp/wordpress.zip /var/www/html/staging
+unzip /var/www/html/staging/wordpress.zip -d /var/www/html/staging
+chown -R www-data:wordpress /var/www/html/staging/wordpress
+chmod 775 /var/www/html/staging/wordpress
+rsync /var/www/html/staging/wordpress/* /var/www/html/staging
+
+## cleanup files ##
+rm /tmp/wordpress.zip* &> /dev/null
+rm /var/www/html/wordpress* &> /dev/null
+rm /var/www/html/staging/wordpress* &> /dev/null
+rm /var/www/html/wp-content/plugins/hello.php &> /dev/null
+rm /var/www/html/staging/wp-content/plugins/hello.php &> /dev/null
 
 ####################################################################################################
 #### SS-Update: Update MU (Must-Use) Plugins (Via SS-Muplugs) ######################################
@@ -1572,10 +1608,12 @@ mysql --user=root --execute="FLUSH PRIVILEGES;"
 source /var/www/ss-muplugs
 
 ####################################################################################################
-#### SS-Update: Upgrade + Autoremove + Autoclean SimpleStack Modules (Ubuntu Packages) #############
+#### SS-Update: Upgrade + Autoremove + Autoclean SimpleStack Modules (Ubuntu Packages) ##############
 ####################################################################################################
 
 ## the main purpose of ss-update is to upgrade all currently installed Ubuntu packages ##
+## because we use apt (not apt-get) this will also upgrade the Linux kernel ##
+
 ## temporarily disable UFW Firewall ##
 ufw --force disable
 
@@ -1593,15 +1631,6 @@ apt autoremove
 
 ## autoclean Ubuntu packages ##
 apt autoclean
-
-####################################################################################################
-#### SS-Update: Force Retrieve Latest Versions Of SS-Check + SS-Worker #############################
-####################################################################################################
-
-## run ss-check and ss-worker (in case SimpleStack crons have not been running) ##
-source /var/www/ss-check
-source /var/www/ss-worker
-source /var/www/ss-check
 
 ####################################################################################################
 #### SS-Update: Purge All Caches (Via SS-Purge) ####################################################
@@ -1637,9 +1666,9 @@ ufw --force enable
 echo "y" | ufw enable
 
 # retrieve latest versions ##
-wget -O /tmp/ufw http://simplestack.git.supercluster.io/ufw-firewall/ufw.txt
-wget -O /tmp/ufw.conf http://simplestack.git.supercluster.io/ufw-firewall/ufw-conf.txt
-wget -O /tmp/user.rules http://simplestack.git.supercluster.io/ufw-firewall/user-rules.txt
+wget -O /tmp/ufw https://simplestack.supercluster.io/ufw-firewall/ufw.txt
+wget -O /tmp/ufw.conf https://simplestack.supercluster.io/ufw-firewall/ufw-conf.txt
+wget -O /tmp/user.rules https://simplestack.supercluster.io/ufw-firewall/user-rules.txt
 
 if [[ -z "$SSH_PORT" ]]; then 
     sed -i "s/@SSH_PORT/6969/g" /tmp/user.rules
@@ -1686,7 +1715,7 @@ else
 fi
 
 ####################################################################################################
-#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ###############
 ####################################################################################################
 
 ## Ref: https://linux.die.net/man/8/apt-get
@@ -1722,4 +1751,4 @@ fi
 ## Ref: https://stackoverflow.com/questions/26458121/grep-a-specific-string-from-bash-script-and-compare
 ## Ref: https://unix.stackexchange.com/questions/372733/get-output-and-return-value-of-grep-in-single-operation-in-bash
 ## Ref: https://stackoverflow.com/questions/18789907/read-values-from-configuration-file-and-use-in-shell-script
-## Ref: https://stackoverflow.com/questions/38385963/sed-replacing-string-with-quotation-marks 
+## Ref: https://stackoverflow.com/questions/38385963/sed-replacing-string-with-quotation-marks
