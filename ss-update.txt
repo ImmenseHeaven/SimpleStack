@@ -79,6 +79,15 @@ function ln {
 source /var/www/ss-dump
 
 ####################################################################################################
+#### SS-Update: Retrieve Latest SS-Check + SS-Worker Scripts #######################################
+####################################################################################################
+
+## run ss-check and ss-worker (in case SlickStack crons have not been running) ##
+source /var/www/ss-check
+source /var/www/ss-worker
+source /var/www/ss-check
+
+####################################################################################################
 #### SS-Update: Install Latest SS-Config File (Safely Replicates Existing Variables) ###############
 ####################################################################################################
 
