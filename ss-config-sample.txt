@@ -139,6 +139,20 @@ CLOUDFLARE_WIDGET_DNS="true"
 # CLOUDFLARE_RECOMMENDED_SETTINGS="true"
 
 ####################################################################################################
+#### SS-Config: Remote Backup (Via SFTP/API) Settings ##############################################
+####################################################################################################
+
+## MODULE VERSION: 
+
+## not to be confused with the ss-dump script which creates a temporary local archive ##
+## remote backups (ss-backup) push your SlickStack files to a remote server ##
+
+## BACKUP_SERVICE = [dropbox|backblaze|etc]
+## BACKUP_API_KEY
+## BACKUP_USER
+## BACKUP_PASSWORD
+
+####################################################################################################
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
@@ -160,15 +174,14 @@ CLOUDFLARE_WIDGET_DNS="true"
 ## for stability reasons several WP defined constants are hard-coded in the wp-config ##
 ## define additional constants using the included Custom Functions MU plugin ##
 
-## WP_LANG =
-## WP_POST_REVISIONS =
-## WP_AUTOSAVE_INTERVAL =
-## WP_HTTP_BLOCK_EXTERNAL =
-## WP_ACCESSIBLE_HOSTS =
-## WP_DISALLOW_FILE_EDIT =
-## WP_DISALLOW_FILE_MODS =
-## WP_ALLOW_UNFILTERED_UPLOADS =
-
+## WP_LANG = [en-US|zh-TW|etc] it makes things a lot simpler to use en-US here ##
+## WP_POST_REVISIONS = [3|5|10|etc] the smaller the better but >1 to avoid data loss ##
+## WP_AUTOSAVE_INTERVAL = [15|30|60|120|etc] less often saves resources but risks data loss ##
+## WP_HTTP_BLOCK_EXTERNAL = [false|true] best for typical users to keep this disabled ##
+## WP_ACCESSIBLE_HOSTS = [api.wordpress.org,example.com,etc] comma separated allowed hosts ##
+## WP_DISALLOW_FILE_EDIT = [false|true] prevents editing plugin/theme files in WP Admin ##
+## WP_DISALLOW_FILE_MODS = [false|true] prevents all core/plugin/theme updates and changes ##
+## WP_ALLOW_UNFILTERED_UPLOADS = [true|false] interactive communities should not allow ##
 
 WP_LANG="en-US"
 WP_POST_REVISIONS="3"
@@ -186,7 +199,7 @@ WP_ALLOW_UNFILTERED_UPLOADS="true"
 ## MODULE VERSION: OpenSSL 1.1.1x + Certbot 0.40.0
 
 ## we recommend OpenSSL because it is infinitely simpler and more reliable to maintain ##
-## even if you choose Cerbot you will still need CloudFlare active during setup ##
+## even if you choose Certbot you will still need CloudFlare active during setup ##
 
 ## SSL_TYPE = [openssl|certbot] OpenSSL is easier to manage (CloudFlare required if chosen) ##
 ## SSL_PROTOCOLS = [TLSv1.2|TLSv1.3|etc] for compliance needs (TLSv1.2 recommended) ##
@@ -207,7 +220,6 @@ SSL_BUFFER_SIZE="16k"
 
 SSL_EMAIL="user@example.com"
 SSL_EMAIL_ALERTS="false"
-# CERTBOT_CHALLENGE_TYPE="http"
 
 ## CSR_COUNTRY = [US|etc] country to be used with your SSL CSR request data ##
 ## CSR_STATE = [Nevada|etc] state or province to be used with your SSL CSR request data ##
@@ -376,7 +388,7 @@ INNODB_FLUSH_METHOD="O_DIRECT_NO_FSYNC"
 
 PHP_PRECISION="14"
 PHP_OUTPUT_BUFFERING="4096"
-PHP_UNSERIALIZE_MAX_DEPTH="4096" ## PHP 7.4
+PHP_UNSERIALIZE_MAX_DEPTH="4096" ## PHP 7.4+
 PHP_SERIALIZE_PRECISION="-1"
 PHP_DISABLE_FUNCTIONS=""
 PHP_DISABLE_CLASSES=""
