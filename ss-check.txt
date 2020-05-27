@@ -97,6 +97,7 @@ wget -O /tmp/ss-clean https://simplestack.git.supercluster.io/ss-clean.txt
 wget -O /tmp/ss-config-sample https://simplestack.git.supercluster.io/ss-config-sample.txt
 wget -O /tmp/ss-dump https://simplestack.git.supercluster.io/ss-dump.txt
 wget -O /tmp/ss-encrypt https://simplestack.git.supercluster.io/ss-encrypt.txt
+wget -O /tmp/ss-import http://mirrors.slickstack.io/ss-import.txt
 wget -O /tmp/ss-install https://simplestack.git.supercluster.io/ss-install.txt
 wget -O /tmp/ss-muplugs https://simplestack.git.supercluster.io/ss-muplugs.txt
 wget -O /tmp/ss-perms https://simplestack.git.supercluster.io/ss-perms.txt
@@ -127,6 +128,7 @@ cp /tmp/ss-clean /var/www/ss-clean
 cp /tmp/ss-config-sample /var/www/ss-config-sample
 cp /tmp/ss-dump /var/www/ss-dump
 cp /tmp/ss-encrypt /var/www/ss-encrypt
+cp /tmp/ss-import /var/www/ss-import
 cp /tmp/ss-install /var/www/ss-install
 cp /tmp/ss-muplugs /var/www/ss-muplugs
 cp /tmp/ss-perms /var/www/ss-perms
@@ -147,8 +149,8 @@ mkdir /var/www/logs
 mkdir /var/www/meta
 
 ## ensure misc files exist (makes things look pretty and suppresses error messages) ##
-if [[ ! -f "/var/www/wp.sql" ]]; then 
-    touch "/var/www/wp.sql"; 
+if [[ ! -f "/var/www/meta/wp.sql" ]]; then 
+    touch "/var/www/meta/wp.sql"; 
 fi
 
 ## chroot (SFTP) user directory ##
@@ -159,7 +161,7 @@ chmod 0755 /var/www ## must be 0755
 ## SimpleStack core scripts ##
 chown root:root /var/www/*cron* ## must be root:root
 chown root:root /var/www/ss* ## must be root:root
-chown www-data:www-data /var/www/wp.sql ## root:root should also work
+chown www-data:www-data /var/www/meta/wp.sql ## root:root should also work
 chmod 6770 /var/www/*cron* ## 4700 should also work
 chmod 6770 /var/www/ss* ## 4700 should also work
 chmod 0700 /var/www/ss-config

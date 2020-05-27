@@ -12,15 +12,17 @@ title: SimpleStack (Public Mirrors)
 
 * [adminer](/adminer/)
 * [clamav](/clamav/)
+* [cloudflare](/cloudflare/)
 * [fastcgi-cache](/fastcgi-cache/)
 * [git](/git/)
-* [letsencrypt (certbot)](/letsencrypt/)
+* [letsencrypt](/letsencrypt/)
 * [mu-plugins](/mu-plugins/)
 * [mysql](/mysql/)
 * [nginx](/nginx/)
 * [opcache](/opcache/)
 * [openssl](/openssl/)
 * [php-fpm](/php-fpm/)
+* [postfix](/postfix/)
 * [redis](/redis/)
 * [starter-themes](/starter-themes/)
 * [ubuntu](/ubuntu/)
@@ -72,4 +74,4 @@ title: SimpleStack (Public Mirrors)
 
 ----
 
-*Last updated: May 23, 2020*
+*Last updated: May 26, 2020*

@@ -230,10 +230,12 @@ http {
 #### Nginx: Rate Limiting Settings #################################################################
 ####################################################################################################
     
-## basic rate limiting helps protect the server from small DDOS or brute force attacks ##
+## it is useful for common targets but an external WAF firewall is recommended ##
 ## it is used for common target URIs but an external WAF firewall is recommended ##
     
     limit_req_zone $binary_remote_addr zone=one:10m rate=1r/s;
+    limit_req_zone $binary_remote_addr zone=adminer:10m rate=7r/s;
+    limit_req_zone $binary_remote_addr zone=phpmyadmin:10m rate=7r/s;
     limit_req_status 444;
     
 ####################################################################################################
@@ -333,3 +335,5 @@ http {
 ## Ref: http://nginx.org/en/docs/http/configuring_https_servers.html#certificate_with_several_names
 ## Ref: https://github.com/certbot/certbot/blob/master/certbot-nginx/certbot_nginx/_internal/tls_configs/options-ssl-nginx.conf
 ## Ref: https://github.com/mozilla/server-side-tls/issues/198
+## Ref: https://www.freecodecamp.org/news/nginx-rate-limiting-in-a-nutshell-128fe9e0126c/
+## Ref: https://serverfault.com/questions/630157/nginx-what-is-the-meaning-to-define-burst-if-there-is-the-nodelay-option

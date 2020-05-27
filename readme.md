@@ -2,6 +2,8 @@
 
 SimpleStack is a free LEMP stack automation script written in Bash designed to enhance and simplify WordPress provisioning, performance, and security.
 
+ * **NEW!** SimpleStack now bundles `Adminer` (phpmyadmin) by default, access at: example.com/adminer
+
  * **NEW!** We briefly disabled `SQL_MODE` in the `my.cnf` boilerplate due to a conflict with `ss-config` default settings for the recommended MySQL mode. After realizing that MySQL 8.0 no longer supports NO_AUTO_CREATE_USER, we removed that submode from the default SQL_MODE in the `ss-config` boilerplate default settings, and re-enabled SQL_MODE in the `my.cnf` boilerplate. 
 
 * **NEW!** SimpleStack is now considered Beta (no longer Alpha) and has been moved to supporting Ubuntu 20.04 LTS only, along with PHP 7.4 and MySQL 8.0 which are the new Ubuntu defaults. We have ensured no critical conflicts exist, but some of the documentation and configuration are still being fully optimized for these updated module versions.
@@ -42,7 +44,7 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 * **NEW!** SimpleStack now does `include_once` within wp-config.php on the Custom Functions (MU plugin) file `/var/www/html/wp-content/functions.php` meaning much more reliable PHP functions...
 
 
-*Last updated: May 2, 2020*
+*Last updated: May 27, 2020*
 
 *Default Ports: 80 (HTTP), 443 (HTTPS), 6969 (SSH)*
 
@@ -110,6 +112,7 @@ After completing the installation steps above, your `/var/www/` directory should
     /var/www/ss-config-sample
     /var/www/ss-dump
     /var/www/ss-encrypt
+    /var/www/ss-import
     /var/www/ss-install
     /var/www/ss-muplugs
     /var/www/ss-perms
@@ -118,7 +121,6 @@ After completing the installation steps above, your `/var/www/` directory should
     /var/www/ss-scan
     /var/www/ss-update
     /var/www/ss-worker
-    /var/www/wp.sql
     
 ...likewise, your `/var/www/html/` (WordPress) directory should look like this:    
     
