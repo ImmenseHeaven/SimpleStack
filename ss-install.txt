@@ -83,7 +83,7 @@ if [[ "${UBUNTU_VERSION}" != "20.04" ]]; then
 fi
 
 ## ensure ss-config build version matches ss-install build version ##
-if [[ "$SS_BUILD" != "APR2020B" ]]; then 
+if [[ "$SS_BUILD" != "MAY2020A" ]]; then 
     echo -e "\e[93mYour ss-config file is outdated. Please update it by running ss-update and then run ss-install again.\e[0m" >&2
     exit 1
 fi
@@ -186,6 +186,20 @@ else
     sed -i "s/@SSH_PORT/${SSH_PORT}/g" /tmp/sshd_config
 fi
 
+## enable/disable password authentication (depending on if SSH_KEYS is enabled) ##
+if [[ "$SSH_KEYS" == "true" ]]; then 
+    sed -i "s/@SSH_PASSWORD_AUTHENTICATION/no/g" /tmp/sshd_config
+else 
+    sed -i "s/@SSH_PASSWORD_AUTHENTICATION/yes/g" /tmp/sshd_config
+fi
+
+## enable/disable public key authentication (depending on if SSH_KEYS is enabled) ##
+if [[ "$SSH_KEYS" == "true" ]]; then 
+    sed -i "s/@SSH_PUBKEY_AUTHENTICATION/yes/g" /tmp/sshd_config
+else 
+    sed -i "s/@SSH_PUBKEY_AUTHENTICATION/no/g" /tmp/sshd_config
+fi
+
 ## allow IPv6 SSH sessions (any) if no IPv4 address is detected on the server ##
 # if [[ CURRENT IP ADDRESS IS IPV6 ONLY ]]; then 
 #    sed -i "s/AddressFamily inet/AddressFamily any/g" /tmp/sshd_config
@@ -200,6 +214,14 @@ cp /tmp/sshd_config /etc/ssh/sshd_config
 ## reset permissions ##
 chown root:root /etc/ssh/sshd_config
 chmod 0440 /etc/ssh/sshd_config
+
+mkdir touch /var/www/meta/.ssh
+chown $SUDO_USER:$SUDO_USER /var/www/meta/.ssh
+chmod 0755 /var/www/meta/.ssh ## should be 0775 as per Ubuntu docs
+
+touch /var/www/meta/.ssh/authorized_keys
+chown $SUDO_USER:$SUDO_USER /var/www/meta/.ssh/authorized_keys
+chmod 0664 /var/www/meta/.ssh/authorized_keys ## should be 0664 as per Ubuntu docs
 
 ## restart services ##
 /etc/init.d/ssh restart

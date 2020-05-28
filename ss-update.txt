@@ -95,7 +95,7 @@ source /var/www/ss-check
 ## otherwise default (recommended) variable values will be implemented automatically ##
 
 ## compability for updating ss-config ##
-SS_UPDATE_BUILD="APR2020B"
+SS_UPDATE_BUILD="MAY2020A"
 
 ## delete leftover files ##
 rm /tmp/ss-config*
@@ -123,7 +123,11 @@ if [[ -n "$SSH_PORT" ]]; then
     sed -i "s|\(^SSH_PORT=\).*|SSH_PORT=\"$SSH_PORT\"|g" /tmp/ss-config
 fi
 
-## copy over sftp settings ##
+if [[ -n "$SSH_KEYS" ]]; then 
+    sed -i "s|\(^SSH_KEYS=\).*|SSH_KEYS=\"$SSH_KEYS\"|g" /tmp/ss-config
+fi
+
+ ## copy over sftp settings ##
 sed -i "s|\(^SFTP_USER=\).*|SFTP_USER=\"$SFTP_USER\"|g" /tmp/ss-config
 sed -i "s|\(^SFTP_PASSWORD=\).*|SFTP_PASSWORD=\"$SFTP_PASSWORD\"|g" /tmp/ss-config
 
