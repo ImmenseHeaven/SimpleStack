@@ -23,7 +23,7 @@
 SS_BUILD="MAY2020A"
 
 ####################################################################################################
-#### SS-Config: Ubuntu Root + Sudo User Settings (Console + SSH Access) ############################
+#### SS-Config: Select WordPress + WP-Config Settings ##############################################
 ####################################################################################################
 
 ## MODULE VERSION: Ubuntu 20.04 LTS
@@ -177,6 +177,10 @@ CLOUDFLARE_WIDGET_DNS="true"
 ####################################################################################################
 
 ## MODULE VERSION: WordPress 5.4.x
+
+## WP_CRON_METHOD = [auto|wordpress|server] auto lets SlickStack decide WP-Cron method ##
+
+# WP_CRON_METHOD="auto"
 
 ## for stability reasons several WP defined constants are hard-coded in the wp-config ##
 ## define additional constants using the included Custom Functions MU plugin ##

@@ -167,6 +167,20 @@ chown www-data:wordpress /var/www/html/wp-content/blacklist.txt ## change to www
 chmod 0440 /var/www/html/wp-content/blacklist.txt
 
 ####################################################################################################
+#### SS-Worker: Call WP-Cron Manually (Depends On SS-Config) #######################################
+####################################################################################################
+
+## run wp-cron here in future build if set in ss-config and disabled in wp-config ##
+
+# WP_CRON_METHOD="auto"
+
+#if [[ "$WP_CRON_METHOD" == "server" ]]; then 
+#    php /var/www/html/wp-cron.php
+#elif [[ "$WP_CRON_METHOD" == "auto" ]]; then 
+#    php /var/www/html/wp-cron.php
+#fi
+
+####################################################################################################
 #### SS-Worker: Calculate Largest Directories On Server + Update Meta Records ######################
 ####################################################################################################
 
@@ -187,14 +201,13 @@ rm -R -f /tmp/blacklist*
 # source /var/www/ss-muplugs
 # source /var/www/ss-custom
 
-## run wp-cron here in future build if set in ss-config and disabled in wp-config ##
-
 ####################################################################################################
 #### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
 ####################################################################################################
 
 ## Ref: https://linuxize.com/post/bash-functions/
 ## Ref: https://www.cyberciti.biz/faq/unix-linux-appleosx-bsd-shell-appending-date-to-filename/
+## Ref: https://wordpress.stackexchange.com/questions/199725/triggering-cron-by-calling-wp-cron-php-on-the-command-line-rather-than-with-wget
 
 ################
 #### SS_EOF ####

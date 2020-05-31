@@ -702,7 +702,7 @@ luminpop ;; deprecated (a.k.a. Lumin Popover by Lumin Apps)
 /machete/ ;; ss conflicts
 /mailchimp/ ;; deprecated
 mailchimp-for-woocommerce ;; serious errors, resource intensive, poor coding, better options exist
-mailchimp-forms-by-mailmunch ;; spyware
+mailchimp-forms-by-mailmunch ;; spyware, bloated (By Mailmunch)
 /mailin/ ;; blacklist risk (smtp)
 mailster-multi-smtp ;; blacklist risk (smtp)
 /maintenance-mode/ ;; ss conflicts
@@ -736,7 +736,7 @@ miwoftp ;; exploitable
 mixpanel-integration ;; not maintained
 mobius-conversion-tracker ;; not maintained
 mojo-marketplace-wp-plugin ;; vendor specific
-monsterinsights-performance ;; excessive logging
+moon-phases ;; not maintained (Joe's Web Tools)
 /mp6/ ;; deprecated, exists in wp core
 mts-url-shortener ;; spyware company, poor coding, serious errors, better options exist (MyThemeShop)
 multi-google-analytics ;; bloated, not maintained, bad practice
@@ -1458,6 +1458,7 @@ The following plugins will be disallowed on our network in June 2021, please fin
 ;; match any path (case insensitive)
 ;; for exact directory matches use slashes e.g. /revslider/
 [path future]
+memberful-wp ;; bloated, spyware (By Memberful)
 adrotate ;; bloated, excessive logging (By Arnan de Gans)
 adrotate-pro ;; bloated, excessive logging (By Arnan de Gans)
 genesis-featured-page-extras ;; not maintained, hacks third-party design products (By David Decker)
