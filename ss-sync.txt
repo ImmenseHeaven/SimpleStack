@@ -1,0 +1,91 @@
+#!/bin/bash
+
+####################################################################################################
+#### author: SimpleStack ###########################################################################
+#### link: https://localhostdomain #################################################################
+#### mirror: https://simplestack.git.supercluster.io/ss-sync.txt ###################################
+#### path: /var/www/ss-sync ########################################################################
+#### destination: n/a (not a boilerplate) ##########################################################
+#### purpose: Syncs relevant files and database from production site to the staging site ###########
+#### module version: Ubuntu 20.04 LTS + MySQL 8.0.x + WordPress 5.4.x ##############################
+####################################################################################################
+
+## include SimpleStack configuration ##
+source /var/www/ss-config
+
+####################################################################################################
+#### SimpleStack: Critical Bash Functions (Aliases) For This Script To Work ########################
+####################################################################################################
+
+## apt alias flags ##
+function apt {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/apt -q -y -o Dpkg::Options::=--force-confold -o Dpkg::Options::=--force-confdef "$@"
+}
+
+## add-apt-repository alias flags ##
+function add-apt-repository {
+    export DEBIAN_FRONTEND=noninteractive
+    export DEBIAN_PRIORITY=critical
+    export PATH='/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    command /usr/bin/add-apt-repository -y "$@"
+}
+
+## wget alias flags ##
+function wget {
+    command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
+}
+
+## cp alias flags ##
+function cp {
+    command cp -R -f -d --no-preserve=mode,ownership "$@"
+}
+
+## rsync alias flags ##
+function rsync {
+    command rsync -aI "$@"
+}
+
+## unzip alias flags ##
+function unzip {
+    command unzip -o "$@"
+}
+
+## rm alias flags ##
+function rm {
+    command rm -R -f "$@"
+}
+
+## mkdir alias flags ##
+function mkdir {
+    command mkdir -p "$@"
+}
+
+## ln alias flags ##
+function ln {
+    command ln -s -f "$@"
+}
+
+####################################################################################################
+#### SS-Sync: Copy All Files + Database From Production To Staging #################################
+####################################################################################################
+
+# cp /var/www/html/wp-content/functions.php /var/www/html/staging/wp-content/functions.php
+rsync --exclude 'uploads' /var/www/html/wp-content/* /var/www/html/staging/wp-content
+
+## sync production SQL tables to staging_ prefix tables (same database) ##
+
+ 
+####################################################################################################
+#### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
+####################################################################################################
+
+## Ref: https://community.centminmod.com/threads/wp-engine-type-production-staging-file-and-db-sync.19720/
+## Ref: https://softwareengineering.stackexchange.com/questions/117945/staging-environment-vs-production-environment
+## Ref: https://www.thegeekstuff.com/2011/01/rsync-exclude-files-and-folders/
+
+#################################
+## DO NOT DELETE: SS_CHECK_EOF ##
+#################################
