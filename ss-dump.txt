@@ -81,6 +81,7 @@ echo -e "\e[36mDumping the live MySQL database to /var/www/meta/wp.sql...\e[0m" 
 export MYSQL_PWD=$DB_PASSWORD_ROOT
 
 ## dump MySQL database to /var/www/wp.sql (overwrites) ##
+#### /usr/bin/mysqldump
 mysqldump --user=root --host="$DB_HOST" --protocol=tcp --port=3306 --dump-date --flush-privileges --force "$DB_NAME" > /var/www/meta/wp.sql
 
 ####################################################################################################
@@ -88,8 +89,6 @@ mysqldump --user=root --host="$DB_HOST" --protocol=tcp --port=3306 --dump-date -
 ####################################################################################################
 
 ## reset permissions ##
-chown -R $SFTP_USER:www-data /var/www/wp.sql
-chmod 6775 /var/www/wp.sql
 chown -R $SFTP_USER:www-data /var/www/meta/wp.sql
 chmod 6775 /var/www/meta/wp.sql
 
@@ -108,3 +107,4 @@ echo -e "\e[93mSUCCESS! The MySQL database was dumped to /var/www/wp.sql.\e[0m" 
 ## Ref: https://unix.stackexchange.com/questions/293966/suppress-warning-messages-from-mysql-in-shell-script-but-allow-errors
 ## Ref: https://github.com/cytopia/devilbox/issues/212
 ## Ref: https://stackoverflow.com/questions/32133353/unable-to-connect-to-mysql-database-in-ubuntu
+## Ref: https://dba.stackexchange.com/questions/35847/mysqldump-flush-privileges-option
