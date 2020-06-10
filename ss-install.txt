@@ -1466,6 +1466,11 @@ sed -i "s/@SITE_TLD/${SITE_TLD}/g" /tmp/wp-config.txt
 ## replace SFTP Details placeholders ##
 sed -i "s/@SFTP_USER/${SFTP_USER}/g" /tmp/wp-config.txt
 sed -i "s/@SFTP_PASSWORD/${SFTP_PASSWORD}/g" /tmp/wp-config.txt
+if [[ -z "$SSH_PORT" ]]; then 
+    sed -i "s/@SSH_PORT/6969/g" /tmp/wp-config.txt
+else 
+    sed -i "s/@SSH_PORT/${SSH_PORT}/g" /tmp/wp-config.txt
+fi
 
 ## replace CloudFlare placeholders ##
 sed -i "s/@CLOUDFLARE_API_KEY/${CLOUDFLARE_API_KEY}/g" /tmp/wp-config.txt
@@ -1631,7 +1636,7 @@ sed -i "s/@DB_PASSWORD/${DB_PASSWORD}/g" /tmp/wp-config.txt
 sed -i "s/@DB_HOST/${DB_HOST}/g" /tmp/wp-config.txt
 sed -i "s/@DB_CHARSET/${DB_CHARSET}/g" /tmp/wp-config.txt
 sed -i "s/@DB_COLLATE/${DB_COLLATE}/g" /tmp/wp-config.txt
-sed -i "s/@DB_PREFIX/stag_/g" /tmp/wp-config.txt
+sed -i "s/@DB_PREFIX/staging_${DB_PREFIX}/g" /tmp/wp-config.txt
 
 ## disable object cache (staging) ##
 sed -i "s/@OBJECT_CACHE/false/g" /tmp/wp-config.txt
@@ -1650,6 +1655,11 @@ sed -i "s/@SITE_TLD/${SITE_TLD}/g" /tmp/wp-config.txt
 ## replace SFTP Details placeholders ##
 sed -i "s/@SFTP_USER/${SFTP_USER}/g" /tmp/wp-config.txt
 sed -i "s/@SFTP_PASSWORD/${SFTP_PASSWORD}/g" /tmp/wp-config.txt
+if [[ -z "$SSH_PORT" ]]; then 
+    sed -i "s/@SSH_PORT/6969/g" /tmp/wp-config.txt
+else 
+    sed -i "s/@SSH_PORT/${SSH_PORT}/g" /tmp/wp-config.txt
+fi
 
 ## replace CloudFlare placeholders ##
 sed -i "s/@CLOUDFLARE_API_KEY/${CLOUDFLARE_API_KEY}/g" /tmp/wp-config.txt

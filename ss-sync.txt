@@ -72,6 +72,12 @@ function ln {
 #### SS-Sync: Copy All Relevant Files From Production To Staging ###################################
 ####################################################################################################
 
+## here we will copy over everything from wp-content to staging besides uploads (media) ##
+## ss-clean is run beforehand in order to remove various (large) junk files ##
+
+## run ss-clean ##
+source /var/www/ss-clean
+
 ## copy relevant web root files over ##
 rsync --exclude 'uploads' /var/www/html/wp-content/* /var/www/html/staging/wp-content
 
@@ -86,12 +92,9 @@ rm /tmp/*.sql*
 ## run ss-dump ##
 source /var/www/ss-dump
 
-## change production SQL dump to staging_ prefix (shared database) ##
-cp /var/www/meta/wp.sql /tmp/wp.sql
-# sed "s#/staging/staging.*#/staging#g" /tmp/wp.sql
-sed -i "s/${DB_PREFIX}/staging_/g" /tmp/wp.sql
-sed -i "s#https://${SITE_DOMAIN}#https://${SITE_DOMAIN}/staging#g" /tmp/wp.sql
-mv /tmp/wp.sql /tmp/staging.sql
+## change production SQL dump to staging_ prefix (shared database with hardcoded URIs) ##
+cp /var/www/meta/wp.sql /tmp/staging.sql
+sed -i "s/${DB_PREFIX}/staging_${DB_PREFIX}/g" /tmp/staging.sql
 
 ## prepare MySQL root password (suppresses MySQL security warnings) ##
 export MYSQL_PWD=$DB_PASSWORD_ROOT
@@ -99,9 +102,19 @@ export MYSQL_PWD=$DB_PASSWORD_ROOT
 ## import database ##
 mysql --user=root --host="$DB_HOST" --protocol=tcp --port=3306 --force "$DB_NAME" < /tmp/staging.sql
 
+## fix home and siteurl fields (no mass search/replace to avoid potential conflicts) ##
+mysql --user=root --host="$DB_HOST" --database="$DB_NAME" --protocol=tcp --port=3306 --execute="UPDATE staging_options SET option_value='https://$SITE_DOMAIN/staging' WHERE option_name = 'home';"
+mysql --user=root --host="$DB_HOST" --database="$DB_NAME" --protocol=tcp --port=3306 --execute="UPDATE staging_options SET option_value='https://$SITE_DOMAIN/staging' WHERE option_name = 'siteurl';"
+
 ## cleanup ##
-# rm /var/www/meta/staging.sql*
-# rm /tmp/*.sql*
+rm /var/www/meta/staging.sql*
+rm /tmp/*.sql*
+
+####################################################################################################
+#### SS-Sync: Ensure WP-Config (Staging) Critical Settings Are Correct #############################
+####################################################################################################
+
+## coming soon
 
 ####################################################################################################
 #### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
@@ -127,5 +140,7 @@ mysql --user=root --host="$DB_HOST" --protocol=tcp --port=3306 --force "$DB_NAME
 ## Ref: https://www.unix.com/shell-programming-and-scripting/31583-wildcards-sed.html
 ## Ref: https://stackoverflow.com/questions/9189120/using-sed-with-wildcard
 ## Ref: http://helpdoco.com/Linux-Unix/sed-cannot-rename-permission-denied.htm
+## Ref: https://precisionsec.com/changing-the-wordpress-site-url-using-the-mysql-command-line/
+## Ref: https://stackoverflow.com/questions/20033648/how-to-run-mysql-command-on-bash
 
 ## SS_EOF
