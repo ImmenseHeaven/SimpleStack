@@ -24,21 +24,21 @@ define('DB_PASSWORD', '@DB_PASSWORD'); // ss = *must be unique*
 define('DB_HOST', '@DB_HOST'); // ss = 127.0.0.1
 define('DB_CHARSET', '@DB_CHARSET'); // ss = utf8mb4
 define('DB_COLLATE', '@DB_COLLATE'); // ss = (blank)
-$table_prefix = '@DB_PREFIX'; // ss = wp_ (for production) or stag_ (for staging)
+$table_prefix = 'staging_'; // ss = wp_ (for production) or staging_ (for staging)
 
 /** ********************************************************************************************* */
 /** WP-Config: Domain (URI) + Path Settings ***************************************************** */
 /** ********************************************************************************************* */
 
 /** force URI structure */
-define('WP_HOME', 'https://@SITE_DOMAIN'); // ss = *must be unique*
-define('WP_SITEURL', 'https://@SITE_DOMAIN'); // ss = *must be unique*
-define('WP_CONTENT_URL', 'https://@SITE_DOMAIN/wp-content'); // ss = *must be unique*
-define('WP_PLUGIN_URL', 'https://@SITE_DOMAIN/wp-content/plugins'); // ss = *must be unique*
-define('WP_CONTENT_DIR', '/var/www/html/wp-content'); // ss = /var/www/html/wp-content
-define('WP_PLUGIN_DIR', '/var/www/html/wp-content/plugins'); // ss = /var/www/html/wp-content/plugins
-define('WP_LANG_DIR', '/var/www/html/wp-content/languages'); // ss = /var/www/html/wp-content/languages
-define('WP_TEMP_DIR', '/var/www/html/wp-content/temp'); // ss = /var/www/html/wp-content/temp
+define('WP_HOME', 'https://@SITE_DOMAIN/staging'); // ss = *must be unique*
+define('WP_SITEURL', 'https://@SITE_DOMAIN/staging'); // ss = *must be unique*
+define('WP_CONTENT_URL', 'https://@SITE_DOMAIN/staging/wp-content'); // ss = *must be unique*
+define('WP_PLUGIN_URL', 'https://@SITE_DOMAIN/staging/wp-content/plugins'); // ss = *must be unique*
+define('WP_CONTENT_DIR', '/var/www/html/staging/wp-content'); // ss = /var/www/html/wp-content
+define('WP_PLUGIN_DIR', '/var/www/html/staging/wp-content/plugins'); // ss = /var/www/html/staging/wp-content/plugins
+define('WP_LANG_DIR', '/var/www/html/staging/wp-content/languages'); // ss = /var/www/html/wp-content/languages
+define('WP_TEMP_DIR', '/var/www/html/staging/wp-content/temp'); // ss = /var/www/html/wp-content/temp
 define('UPLOADS', 'wp-content/uploads'); // ss = wp-content/uploads
 
 /** cookie paths */
@@ -195,7 +195,7 @@ define('WPCF7_UPLOADS_TMP_DIR', '/var/www/html/wp-content/temp'); // ss = /var/w
 //VIRGIN//define('WP_DEFAULT_THEME', 'throwaway'); // ss = throwaway
 
 /** ********************************************************************************************* */
-/** SimpleStack: XXX Common (MU Plugin) Settings ************************************************ */
+/** SimpleStack: XXX Common (MU Plugin) Settings ************************************************* */
 /** ********************************************************************************************* */
 
 // define('XXX_NOTICES', @SIMPLESTACK_NOTICES); // ss = true
@@ -230,7 +230,7 @@ define('CLOUDFLARE_WIDGET_DNS', @CLOUDFLARE_WIDGET_DNS); // ss = true
 define('CUSTOM_FUNCTIONS', true); // ss = true
 
 /** ********************************************************************************************* */
-/** Simpletack: Dashboard Cleanup (MU Plugin) Settings ****************************************** */
+/** SimpleStack: Dashboard Cleanup (MU Plugin) Settings ***************************************** */
 /** ********************************************************************************************* */
 
 define('DASHBOARD_CLEANUP', true); // ss = true
@@ -382,7 +382,7 @@ define('LIMIT_HEARTBEAT', true); // ss = true
 // define('MINIFY_HTML_UTF8_SUPPORT', true); // default = true
 
 /** ********************************************************************************************* */
-/** SimpleStack: Plugin Blacklist (MU Plugin) Settings ****************************************** */
+/** SSimpleStack: Plugin Blacklist (MU Plugin) Settings ****************************************** */
 /** ********************************************************************************************* */
 
 define('PLUGIN_BLACKLIST', true); // ss = true
@@ -398,7 +398,7 @@ define('PLUGIN_BLACKLIST', true); // ss = true
 // define('SERVER_STATUS_DISPLAY', 'grid|widefat'); // default = widefat
 
 /** ********************************************************************************************* */
-/** SimpleStack: SFTP Details (MU Plugin) Settings *********************************************** */
+/** SimpleStack: SFTP Details (MU Plugin) Settings ********************************************** */
 /** ********************************************************************************************* */
 
 define('SFTP_DETAILS', true); // ss = true

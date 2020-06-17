@@ -1601,7 +1601,7 @@ rm /tmp/wp-config*
 cd /var/www/html/staging
 
 ## retrieve latest wp-config boilerplate ##
-wget -O /tmp/wp-config.txt https://simplestack.git.supercluster.io/wordpress/wp-config.txt
+wget -O /tmp/wp-config.txt http://mirrors.slickstack.io/wordpress/wp-config-staging.txt
 
 ###### WP Multisite settings ########
 
@@ -1636,7 +1636,7 @@ sed -i "s/@DB_PASSWORD/${DB_PASSWORD}/g" /tmp/wp-config.txt
 sed -i "s/@DB_HOST/${DB_HOST}/g" /tmp/wp-config.txt
 sed -i "s/@DB_CHARSET/${DB_CHARSET}/g" /tmp/wp-config.txt
 sed -i "s/@DB_COLLATE/${DB_COLLATE}/g" /tmp/wp-config.txt
-sed -i "s/@DB_PREFIX/staging_${DB_PREFIX}/g" /tmp/wp-config.txt
+sed -i "s/@DB_PREFIX/staging_/g" /tmp/wp-config.txt
 
 ## disable object cache (staging) ##
 sed -i "s/@OBJECT_CACHE/false/g" /tmp/wp-config.txt
@@ -1649,7 +1649,7 @@ else
 fi
 
 ## replace domain placeholders ##
-sed -i "s#@SITE_DOMAIN#${SITE_DOMAIN}/staging#g" /tmp/wp-config.txt
+sed -i "s#@SITE_DOMAIN#${SITE_DOMAIN}#g" /tmp/wp-config.txt
 sed -i "s/@SITE_TLD/${SITE_TLD}/g" /tmp/wp-config.txt
 
 ## replace SFTP Details placeholders ##
