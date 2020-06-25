@@ -583,10 +583,12 @@ rm /var/www/html/wp-content/plugins/broken-link-checker* ## resource intensive, 
 rm /var/www/html/wp-content/plugins/browser-caching-with-htaccess* ## ss conflicts (apache)
 rm /var/www/html/wp-content/plugins/bugherd* ## ss conflicts
 rm /var/www/html/wp-content/plugins/captcha ## deprecated
+rm /var/www/html/wp-content/plugins/change-wp-admin-login* ## ss conflicts (By Nuno Morais Sarmento)
 rm /var/www/html/wp-content/plugins/classic-editor* ## ss conflicts
 rm /var/www/html/wp-content/plugins/clearfy* ## ss conflicts, bloated (Clearfy)
 rm /var/www/html/wp-content/plugins/codeguard* ## ss conflicts
-rm /var/www/html/wp-content/plugins/contextual-related-posts* ## resource intensive
+rm /var/www/html/wp-content/plugins/contextual-related-posts* ## resource 
+rm /var/www/html/wp-content/plugins/creative-clans-embed-script* ## better options exist, not maintained (By Guido Tonnaer)
 rm /var/www/html/wp-content/plugins/custom-sidebars* ## exploitable, errors/conflicts, resource intensive, bad practice (WPMU Dev)
 rm /var/www/html/wp-content/plugins/disable-rss ## deprecated
 rm /var/www/html/wp-content/plugins/display-widgets ## malware/spyware
@@ -699,6 +701,7 @@ rm /var/www/html/wp-content/plugins/updraft ## ss conflicts, unsafe archives, re
 rm /var/www/html/wp-content/plugins/updraftplus ## ss conflicts, unsafe archives, resource intensive
 rm /var/www/html/wp-content/plugins/upload-max-file-size* ## ss conflicts, php hacks
 rm /var/www/html/wp-content/plugins/uploadify*
+rm /var/www/html/wp-content/plugins/use-any-font* ## bad practice, creates instability
 rm /var/www/html/wp-content/plugins/w3-total-cache* ## ss conflicts, bloated
 rm /var/www/html/wp-content/plugins/way2enjoy-compress-images*
 rm /var/www/html/wp-content/plugins/weather-for-us-widget* ## cryptomining
@@ -724,6 +727,7 @@ rm /var/www/html/wp-content/plugins/wp-database-backup* ## unsafe archives, reso
 rm /var/www/html/wp-content/plugins/wp-db-backup* ## unsafe archives, resource intensive
 rm /var/www/html/wp-content/plugins/wp-editor* ## exists in wp core (syntax editor)
 rm /var/www/html/wp-content/plugins/wp-force-ssl* ## ss conflicts
+rm /var/www/html/wp-content/plugins/wp-instagram-widget* ## deprecated (By scottsweb)
 rm /var/www/html/wp-content/plugins/wp-maximum-execution-time-exceeded* ## ss conflicts
 rm /var/www/html/wp-content/plugins/wp-monero-miner-using-coin-hive* ## cryptomining
 rm /var/www/html/wp-content/plugins/wp-no-category-base* ## not maintained, better options exist

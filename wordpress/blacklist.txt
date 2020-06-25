@@ -124,7 +124,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Rymera Web ;; WP-Cron abuse, database thrashing ;;
-;; Josh Kohlbach (Rymera Web) ;; blames SimpleStack for his poor code instead of fixing it ;;
+;; Josh Kohlbach (Rymera Web) ;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; 3. Not Recommended Vendors (Possibly Long-Term Disallowed In The Future) ;;;;;;;;;;;;;;;;;;;;;;
@@ -323,6 +323,7 @@ category-for-pages ;; not maintained, creates instability
 cf-post-formats ;; deprecated (a.k.a. WP Post Formats by Crowd Favorite)
 change-table-prefix ;; ss conflicts, bad practice, creates instability
 change-password-protected-message ;; malware company (Pipdig)
+change-wp-admin-login ;; ss conflicts (By Nuno Morais Sarmento)
 check-email ;; serious errors, not maintained (by Chris Taylor)
 check-and-enable-gzip-compression ;; ss conflicts (apache)
 cimy-swift-smtp ;; blacklist risk (smtp)
@@ -736,6 +737,7 @@ miwoftp ;; exploitable
 mixpanel-integration ;; not maintained
 mobius-conversion-tracker ;; not maintained
 mojo-marketplace-wp-plugin ;; vendor specific
+monsterinsights-performance ;; excessive logging
 moon-phases ;; not maintained (Joe's Web Tools)
 /mp6/ ;; deprecated, exists in wp core
 mts-url-shortener ;; spyware company, poor coding, serious errors, better options exist (MyThemeShop)
@@ -1391,7 +1393,7 @@ wp-yahoo-smtp ;; blacklist risk (smtp)
 wpa-seo-auto-linker ;; serious errors, creates instability
 wpb-elementor-addons ;; hacks third-party design products (By wpbean)
 wp-central ;; remote dashboards, exploitable (By Softaculous)
-wpcf7-redirect ;; bad practice
+;;wpcf7-redirect ;; bad practice
 wpcloaker ;; blackhat seo, bad idea
 wpdbspringclean ;; not maintained
 wpe-advanced-cache-options ;; vendor specific

@@ -45,7 +45,7 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 * **NEW!** SimpleStack now does `include_once` within wp-config.php on the Custom Functions (MU plugin) file `/var/www/html/wp-content/functions.php` meaning much more reliable PHP functions...
 
 
-*Last updated: May 27, 2020*
+*Last updated: Jun 19, 2020*
 
 *Default Ports: 80 (HTTP), 443 (HTTPS), 6969 (SSH)*
 
@@ -59,10 +59,11 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 | **MySQL** | [mirrors](https://simplestack.git.supercluster.io/mysql/) | 8.0.x | `my.cnf` |
 | **PHP-FPM** | [mirrors](https://simplestack.git.supercluster.io/php-fpm/) | 7.4.x | `php.ini` + `php-fpm.conf` + `www.conf` |
 | **Zend / OPcache** | [mirrors](https://simplestack.git.supercluster.io/opcache/) | 3.4.x / 7.4.x | (same as PHP-FPM) |
-| **WordPress** | [mirrors](https://simplestack.git.supercluster.io/wordpress/) | 5.4.1 | some WP Core junk files are removed by `ss-clean` |
 | **MU Plugins** | [mirrors](https://simplestack.git.supercluster.io/mu-plugins/) | (n/a) | optional `mu-plugins` |
 | **WP-CLI** | [mirrors](https://simplestack.git.supercluster.io/wp-cli/) | 2.4.0 | default config |
-| **Redis (Obj Cache)** | [mirrors](https://simplestack.git.supercluster.io/redis/) | 5.0.x | `redis.conf` + `object-cache.php` |
+| **Redis (Obj Cache)** | [mirrors](http://mirrors.slickstack.io/redis/) | 5.0.x | `redis.conf` + `object-cache.php` |
+| **WordPress** | [mirrors](http://mirrors.slickstack.io/wordpress/) | 5.4.2 | some WP Core junk files are removed by `ss-clean` |
+| **Adminer** | [mirrors](http://mirrors.slickstack.io/adminer/) | 4.7.7 | default config |
 | **Git** | [mirrors](https://simplestack.git.supercluster.io/git/) | 2.25.x | default config |
 | **UFW Firewall** | [mirrors](https://simplestack.git.supercluster.io/ufw-firewall/) | 0.36 | `ufw` + `ufw.conf` + `user-rules` |
 | **ClamAV** | [mirrors](https://simplestack.git.supercluster.io/clamav/) | 0.101.x | `freshclam.conf` |
