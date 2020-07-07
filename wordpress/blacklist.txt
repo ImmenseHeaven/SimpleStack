@@ -74,6 +74,7 @@
 ;; smtp risks = risks getting your server/domain blacklisted as an email spammer
 ;; resource intensive = uses too many server resources than should typically be needed
 ;; theme-specific custom post types = generates CPTs that only support their own WP themes
+;; theme-specific code ;; generates data/code that cannot be used by other WP themes
 ;; no public changelog = no public documentation of code/version changes or patches
 ;; wp cronyism = regularly abuses influence by trying to acquire unfair market advantage
 ;; violates GPL terms = illegally breaks the guidelines required by the GPL license
@@ -88,7 +89,7 @@
 ;; Bhanu Ahluwalia ;; consumer fraud, spyware, ransomware ;;
 ;; Brainstorm Force ;; bloated, creates instability, hacks third-party design products, lock-in issues ;;
 ;; Brian Lee Jackson ;; consumer fraud, code theft ;;
-;; bringthepixel ;; poor coding, bloated, spammy, better options exist ;;
+;; bringthepixel (Bimber theme) ;; poor coding, bloated, theme-specific code, no public changelog ;;
 ;; Jetpack ;; bloated, spammy, hijacks wp admin, lacks transparency, resource intensive, wp cronyism ;;
 ;; Joost de Valk ;; bloated, spammy, hijacks wp admin, poor coding, wp cronyism
 ;; Kinsta (Brian Jackon, Alex Panagis, Jon Penland, Mark Gavalda) ;;
@@ -116,6 +117,7 @@
 ;; Syed Balkhi ;; spammy, bloated, wp cronyism, better options exist ;;
 ;; The Web Design Hub ;; brand abandoned ;;
 ;; Thrive Themes ;; bloated, poor coding, excessive logging, serious errors, hijacks wp core functions
+;; Vafour (Vafpress Framework) ;; brand abandoned, not maintained ;;
 ;; Warfare Plugins, etc (Dustin W. Stout, Jason T. Wiser, Nicholas Z. Cardot) ;;
 ;; WebFactory Ltd ;; history of exploits, history of poor coding ;;
 
@@ -292,6 +294,7 @@ bloglovin-button ;; malware company (Pipdig)
 bloglovin-widget ;; malware company (Pipdig)
 blogvault ;; ss conflicts, resource intensive
 BoosterPage ;; deprecated, poor code, no public docs (Smart Marketer)
+bottom-of-every-post ;; not maintained (By Corey Salzano)
 bounce-handler-mailpoet ;; ss conflicts, bad practice (smtp, php mail)
 brave-payments-verification ;; not maintained, pointless, bad practice (should be done via SFTP etc)
 broken-link-checker ;; deprecated, excessive logging
@@ -732,6 +735,8 @@ mihan-wp-cache ;; ss conflicts
 mime-types-plus ;; ss conflicts, exploitable, pointless
 minify-html ;; ss conflicts
 minimal-coming-soon-maintenance-mode ;; exploitable, history of poor code (by WebFactory)
+miniorange-2-factor-authentication ;; no public changelog, poor coding
+miniorange-2-factor-authentication-premium ;; no public changelog, poor coding
 miniorange-limit-login-attempts ;; excessive logging
 miwoftp ;; exploitable
 mixpanel-integration ;; not maintained
@@ -1006,6 +1011,7 @@ sitemap-page-embed ;; not maintained, bad practice (HTML sitemaps unnecessary)
 sitemap-simple ;; bad practice (HTML sitemaps unnecessary)
 sitemap-with-woocommerce ;; bad practice (HTML sitemaps unnecessary)
 sitewide-message ;; not maintained
+sitewide-notice-twdh ;; deprecated, no public changelog (By The Web Design Hub)
 skype-online-status ;; deprecated
 skysa-google-1-app ;; deprecated
 slick-popup ;; deprecated, exploitable, authors ignored WordFence reports (by Om Ak Solutions)
@@ -1123,6 +1129,7 @@ ultimate-facebook-comments-email-notify ;; not maintained
 ultimate-security-checker ;; not maintained, serious errors, unclear purpose
 ultimate-reset ;; ss conflicts, potential data loss
 ultimate-social-media-icons ;; excessive logging
+ultimate-social-media-plus ;; hijacks wp admin, excessive logging, excessive API calls, bloated (By social share pro)
 ultimate-wp-reset ;; ss conflicts, potential data loss
 unlimited-elements-for-elementor ;; hacks third-party design products (By Unlimited Elements)
 unlist-posts ;; creates instability (by Brainstorm Force)
@@ -1460,6 +1467,11 @@ The following plugins will be disallowed on our network in June 2021, please fin
 ;; match any path (case insensitive)
 ;; for exact directory matches use slashes e.g. /revslider/
 [path future]
+vafpress-framework ;; not maintained (By Vafour)
+vafpress-framework-plugin ;; not maintained (By Vafour)
+vafpress-post-formats-ui ;; not maintained (By Vafour)
+vafpress-post-formats-ui-develop ;; not maintained (By Vafour)
+ad-ace ;; no public changelog, theme-specific code (By Bimber / bringthepixel)
 memberful-wp ;; bloated, spyware (By Memberful)
 adrotate ;; bloated, excessive logging (By Arnan de Gans)
 adrotate-pro ;; bloated, excessive logging (By Arnan de Gans)
@@ -1476,7 +1488,6 @@ coschedule-by-todaymade ;; bloated, excessive API calls, bad practice (does not 
 make-column-clickable-elementor ;; hacks third-party design products (By Fernando Acosta)
 native-ads-adnow ;; abandoned (By Adnow)
 sitewide-notice-twdh ;; deprecated, poor coding, better options exist (By The Web Design Hub)
-bottom-of-every-post ;; not maintained (By Corey Salzano)
 all-in-one-seo-pack ;; bloated, history of poor coding, acquired by spammy Syed Balkhi
 dante-framework ;; theme-specific custom post types (By Swift Ideas)
 responsive-welcome-bar ;; bloated, excessive API/resource calls, bad practice (external header bar?) by Zotabox
@@ -1529,7 +1540,6 @@ Ultimate_VC_Addons ;; hacks third-party design products (by Brainstorm Force)
 fullwidth-templates ;; creates instability, hacks third-party design products (by Brainstorm Force)(by Brainstorm Force)
 /upscribe/ ;; slow CDN, bloated, better options exist
 conditional-menus ;; bad practice (horrrible for SEO and usability)
-vafpress-post-formats-ui ;; better options exist
 ;; geo-multi-location-map ;; not maintained (by Omex Infotech)
 ;; Ebor-Framework ;; poor maintenance, no public changelog (By Tom Rhodes)
 ;; ebor-framework ;; poor maintenance, no public changelog (By Tom Rhodes)
@@ -1539,7 +1549,6 @@ vafpress-post-formats-ui ;; better options exist
 ;; yith-woocommerce-order-tracking ;; scamware (does not send tracking unless you upgrade) by YITH Themes
 ;; easy-google-fonts ;; bloated, bad practice (too many selectors, etc), better options exist
 ;; nex-forms ;; no public changelog, better options exist
-vafpress-post-formats-ui-develop ;; abandoned, better options exist
 /oxygen/ ;; creates instability, content lock-in, proprietary page builder
 woocommerce-digital-download-free-shipping ;; serious errors, not maintained
 ;; oauth-twitter-feed-for-developers ;; not maintained (but appears to work okay for now, by Liam Gladdy (Storm Consultancy))
@@ -1641,7 +1650,6 @@ wp-user-frontend ;; bloated, bad practice (too many functions), poor coding, hij
 ;; klaviyo ;; not maintained, serious errors
 ;; tiled-gallery-carousel-without-jetpack ;; not maintained
 ;; /linker/ ;; not maintained
-;; vafpress-post-formats-ui-develop ;; seems abandoned, no public docs
 ;; /monarch/ ;; possible excessive logging (elegant themes)
 ;; nextgen-gallery ;; bloated
 ;; simple-login-log ;; not maintained, excessive logging (not too bad currently)
