@@ -35,6 +35,11 @@ function add-apt-repository {
     command /usr/bin/add-apt-repository -y "$@"
 }
 
+## run ss-optimize if set to weekly or if not defined (default) ##
+if [[ "$SS_INTERVAL_OPTIMIZE" == "weekly" || -z "$SS_INTERVAL_OPTIMIZE" ]]; then 
+    # source /var/www/ss-optimize
+fi
+
 ## wget alias flags ##
 function wget {
     command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
@@ -47,7 +52,7 @@ function cp {
 
 ## rsync alias flags ##
 function rsync {
-    command rsync -aI "$@"
+    command rsync -aI --ignore-errors "$@"
 }
 
 ## unzip alias flags ##

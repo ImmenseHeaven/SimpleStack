@@ -130,10 +130,10 @@ fi
 ####################################################################################################
 
 ## MESSAGE ##
-echo -e "\e[36mRetrieving latest SlickStack files and copying them to local server...\e[0m"
+echo -e "\e[36mRetrieving latest SimpleStack files and copying them to local server...\e[0m"
 
 ## download latest versions ##
-wget -O /tmp/ss-check http://mirrors.slickstack.io/ss-check.txt
+wget -O /tmp/ss-check https://simplestack.git.supercluster.io/ss-check.txt
 
 ## copy files to their destinations ##
 cp /tmp/ss-check /var/www/ss-check
@@ -231,7 +231,7 @@ chmod 0664 /var/www/meta/.ssh/authorized_keys ## should be 0664 as per Ubuntu do
 ####################################################################################################
 
 ## MESSAGE ##
-echo -e "\e[36mInstalling the SlickStack crontab file to Ubuntu root user crontab...\e[0m"
+echo -e "\e[36mInstalling the SimpleStack crontab file to Ubuntu root user crontab...\e[0m"
 
 ## install crontab ##
 crontab /var/www/0-crontab
@@ -1377,7 +1377,7 @@ rm /var/www/html/staging/wp-content/plugins/hello.php &> /dev/null
 rm /tmp/throwaway*
 
 ## retrieve latest throwaway theme ##
-wget -O /tmp/throwaway.zip http://mirrors.slickstack.io/wordpress/throwaway.zip
+wget -O /tmp/throwaway.zip https://simplestack.git.supercluster.io/wordpress/throwaway.zip
 
 ## unzip ##
 unzip -d /tmp/throwaway/ -o -j /tmp/throwaway.zip

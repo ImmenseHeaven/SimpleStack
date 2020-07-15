@@ -451,6 +451,7 @@ dreamobjects ;; vendor specific
 dts-simple-share ;; not maintained
 dukapress ;; exploitable
 duplicate-page ;; exploitable, ss conflicts (Gutenberg), better options exist
+/duplicate-post/ ;; spamware (acquired by Yoast), bloated, better options exist (By Enrico Battocchi & Team Yoast)
 duplicator ;; bloated, database junk, resource intensive
 dvk-social-sharing ;; not maintained
 dw-social-share ;; not maintained
@@ -698,6 +699,7 @@ local-emoji ;; pointless, ss conflicts
 loco-translate ;; pointless, creates instability, potential data loss
 logbook ;; excessive logging
 login-lockdown ;; excessive logging
+login-recaptcha ;; pointless, bloated, ss conflicts (By Robert Peake)
 login-security-solution ;; creates instability, excessive logging, not maintained
 login-wall ;; exploitable
 loginwall-for-wp-beta ;; exploitable
@@ -1467,6 +1469,7 @@ The following plugins will be disallowed on our network in June 2021, please fin
 ;; match any path (case insensitive)
 ;; for exact directory matches use slashes e.g. /revslider/
 [path future]
+custom-order-statuses-woocommerce ;; hijacks WooCommerce Core features (By Tyche Softwares)
 vafpress-framework ;; not maintained (By Vafour)
 vafpress-framework-plugin ;; not maintained (By Vafour)
 vafpress-post-formats-ui ;; not maintained (By Vafour)

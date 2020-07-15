@@ -2,6 +2,8 @@
 
 SimpleStack is a free LEMP stack automation script written in Bash designed to enhance and simplify WordPress provisioning, performance, and security.
 
+* **NEW!** `ss-optimize` converts all MyISAM tables to InnoDB, removes junk SQL data, and more. We recommend running this script manually, or only occassionally, to avoid confusion and to allow for easily restoring potential data loss (although we are extremely careful/limited about removing SQL data).
+
 * **NEW!** (Experimental) SSH keys are now supported (save public key into `/var/www/meta/.ssh/authorized_keys`)
 
 * **NEW!** SimpleStack now bundles `Adminer` (phpmyadmin) by default, access at: example.com/adminer
@@ -61,9 +63,9 @@ NOTE: The self-healing function will respect any custom Cron Job schedules found
 | **Zend / OPcache** | [mirrors](https://simplestack.git.supercluster.io/opcache/) | 3.4.x / 7.4.x | (same as PHP-FPM) |
 | **MU Plugins** | [mirrors](https://simplestack.git.supercluster.io/mu-plugins/) | (n/a) | optional `mu-plugins` |
 | **WP-CLI** | [mirrors](https://simplestack.git.supercluster.io/wp-cli/) | 2.4.0 | default config |
-| **Redis (Obj Cache)** | [mirrors](http://mirrors.slickstack.io/redis/) | 5.0.x | `redis.conf` + `object-cache.php` |
-| **WordPress** | [mirrors](http://mirrors.slickstack.io/wordpress/) | 5.4.2 | some WP Core junk files are removed by `ss-clean` |
-| **Adminer** | [mirrors](http://mirrors.slickstack.io/adminer/) | 4.7.7 | default config |
+| **Redis (Obj Cache)** | [mirrors](https://simplestack.git.supercluster.io/redis/) | 5.0.x | `redis.conf` + `object-cache.php` |
+| **WordPress** | [mirrors](https://simplestack.git.supercluster.io/wordpress/) | 5.4.2 | some WP Core junk files are removed by `ss-clean` |
+| **Adminer** | [mirrors](https://simplestack.git.supercluster.io/adminer/) | 4.7.7 | default config |
 | **Git** | [mirrors](https://simplestack.git.supercluster.io/git/) | 2.25.x | default config |
 | **UFW Firewall** | [mirrors](https://simplestack.git.supercluster.io/ufw-firewall/) | 0.36 | `ufw` + `ufw.conf` + `user-rules` |
 | **ClamAV** | [mirrors](https://simplestack.git.supercluster.io/clamav/) | 0.101.x | `freshclam.conf` |

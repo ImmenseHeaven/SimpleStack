@@ -31,7 +31,6 @@ $table_prefix = 'staging_'; // ss = wp_ (for production) or staging_ (for stagin
 /** ********************************************************************************************* */
 
 /** force URI structure */
-define('WP_HOME', 'https://@SITE_DOMAIN/staging'); // ss = *must be unique*
 define('WP_SITEURL', 'https://@SITE_DOMAIN/staging'); // ss = *must be unique*
 define('WP_CONTENT_URL', 'https://@SITE_DOMAIN/staging/wp-content'); // ss = *must be unique*
 define('WP_PLUGIN_URL', 'https://@SITE_DOMAIN/staging/wp-content/plugins'); // ss = *must be unique*

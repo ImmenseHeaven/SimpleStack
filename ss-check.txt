@@ -33,6 +33,12 @@ function add-apt-repository {
     command /usr/bin/add-apt-repository -y "$@"
 }
 
+## mysql alias flags ##
+function mysql {
+    export MYSQL_PWD=$DB_PASSWORD_ROOT
+    command mysql --user=root --database="$DB_NAME" --host="$DB_HOST" --protocol=tcp --port=3306 --force "$@"
+}
+
 ## wget alias flags ##
 function wget {
     command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
@@ -45,7 +51,7 @@ function cp {
 
 ## rsync alias flags ##
 function rsync {
-    command rsync -aI "$@"
+    command rsync -aI --ignore-errors "$@"
 }
 
 ## unzip alias flags ##
@@ -97,14 +103,17 @@ wget -O /tmp/ss-clean https://simplestack.git.supercluster.io/ss-clean.txt
 wget -O /tmp/ss-config-sample https://simplestack.git.supercluster.io/ss-config-sample.txt
 wget -O /tmp/ss-dump https://simplestack.git.supercluster.io/ss-dump.txt
 wget -O /tmp/ss-encrypt https://simplestack.git.supercluster.io/ss-encrypt.txt
-wget -O /tmp/ss-import http://mirrors.slickstack.io/ss-import.txt
+wget -O /tmp/ss-import https://simplestack.git.supercluster.io/ss-import.txt
 wget -O /tmp/ss-install https://simplestack.git.supercluster.io/ss-install.txt
+wget -O /tmp/ss-install-mysql https://simplestack.git.supercluster.io/ss-install-mysql.txt
+wget -O /tmp/ss-install-nginx https://simplestack.git.supercluster.io/ss-install-nginx.txt
+wget -O /tmp/ss-install-php https://simplestack.git.supercluster.io/ss-install-php.txt
 wget -O /tmp/ss-muplugs https://simplestack.git.supercluster.io/ss-muplugs.txt
 wget -O /tmp/ss-perms https://simplestack.git.supercluster.io/ss-perms.txt
 wget -O /tmp/ss-purge https://simplestack.git.supercluster.io/ss-purge.txt
 wget -O /tmp/ss-restart https://simplestack.git.supercluster.io/ss-restart.txt
 wget -O /tmp/ss-scan https://simplestack.git.supercluster.io/ss-scan.txt
-wget -O /tmp/ss-sync http://mirrors.slickstack.io/ss-sync.txt
+wget -O /tmp/ss-sync https://simplestack.git.supercluster.io/ss-sync.txt
 wget -O /tmp/ss-update https://simplestack.git.supercluster.io/ss-update.txt
 wget -O /tmp/ss-worker https://simplestack.git.supercluster.io/ss-worker.txt
 
@@ -131,6 +140,9 @@ cp /tmp/ss-dump /var/www/ss-dump
 cp /tmp/ss-encrypt /var/www/ss-encrypt
 cp /tmp/ss-import /var/www/ss-import
 cp /tmp/ss-install /var/www/ss-install
+cp /tmp/ss-install-mysql /var/www/ss-install-mysql
+cp /tmp/ss-install-nginx /var/www/ss-install-nginx
+cp /tmp/ss-install-php /var/www/ss-install-php
 cp /tmp/ss-muplugs /var/www/ss-muplugs
 cp /tmp/ss-perms /var/www/ss-perms
 cp /tmp/ss-purge /var/www/ss-purge
@@ -216,6 +228,4 @@ rm /tmp/*cron*
 ## Ref: https://linuxize.com/post/bash-functions/
 # Ref: https://stackoverflow.com/questions/6366530/bash-syntax-error-unexpected-end-of-file
 
-#################################
-## DO NOT DELETE: SS_CHECK_EOF ##
-#################################
+## SS_EOF

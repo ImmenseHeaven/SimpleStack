@@ -36,6 +36,12 @@ function add-apt-repository {
     command /usr/bin/add-apt-repository -y "$@"
 }
 
+## mysql alias flags ##
+function mysql {
+    export MYSQL_PWD=$DB_PASSWORD_ROOT
+    command mysql --user=root --database="$DB_NAME" --host="$DB_HOST" --protocol=tcp --port=3306 --force "$@"
+}
+
 ## wget alias flags ##
 function wget {
     command wget --no-check-certificate --no-cache --no-cookies --tries=3 --timeout=15 "$@"
@@ -48,7 +54,7 @@ function cp {
 
 ## rsync alias flags ##
 function rsync {
-    command rsync -aI "$@"
+    command rsync -aI --ignore-errors "$@"
 }
 
 ## unzip alias flags ##
@@ -92,6 +98,7 @@ rm /tmp/cloudflare*
 rm /tmp/dashboard-cleanup*
 rm /tmp/delete-expired-transients*
 rm /tmp/disable-attachment-pages*
+rm /tmp/disable-emails*
 rm /tmp/disable-embeds*
 rm /tmp/disable-emojis*
 rm /tmp/disable-empty-trash*
@@ -136,11 +143,15 @@ wget -O /tmp/autoloader.php https://simplestack.git.supercluster.io/mu-plugins/a
 ## download Custom Functions files ##
 wget -O /tmp/custom-functions.zip https://simplestack.git.supercluster.io/mu-plugins/custom-functions.zip
 
+## staging site ##
+wget -O /tmp/disable-emails.zip https://simplestack.git.supercluster.io/mu-plugins/disable-emails.zip
+
 ## download Object Cache (required drop-in plugin) files ##
 wget -O /tmp/object-cache.php https://simplestack.git.supercluster.io/mu-plugins/object-cache.txt
 
 ## unzip various files ##
 unzip /tmp/custom-functions.zip -d /tmp
+unzip /tmp/disable-emails.zip -d /tmp
 
 ## delete potentially conflicting Autoloader scripts ##
 rm /var/www/html/wp-content/plugins/autoloader*
@@ -149,6 +160,8 @@ rm /var/www/html/staging/wp-content/plugins/autoloader*
 ## delete potentially conflicting normal plugins (with required MU plugins) ##
 # rm /var/www/html/wp-content/plugins/custom-functions* ## don't delete others until ours is working 100% perfect
 
+## and from staging ##
+rm /var/www/html/staging/wp-content/plugins/disable-emails*
 
 ## delete potentially conflicting object caches (drop-in plugins + normal plugins) ##
 rm /var/www/html/wp-content/object-cache*
@@ -170,6 +183,9 @@ cp /tmp/autoloader.php /var/www/html/wp-content/mu-plugins/autoloader.php
 ## copy required MU plugins files to destinations ##
 cp /tmp/custom-functions /var/www/html/wp-content/mu-plugins/custom-functions
 cp /tmp/custom-functions /var/www/html/staging/wp-content/mu-plugins/custom-functions
+
+## and staging ##
+cp /tmp/disable-emails /var/www/html/staging/wp-content/mu-plugins/disable-emails
 
 ## copy Object Cache files to destination ##
 cp /tmp/object-cache.php /var/www/html/wp-content/object-cache.php
