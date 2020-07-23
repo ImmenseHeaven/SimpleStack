@@ -81,6 +81,9 @@ function ln {
 #### SS-Install: Check OS Compability + Verify SS-Config Freshness + Backup Database ###############
 ####################################################################################################
 
+## NEVER RUN SS-INSTALL UNLESS BUILD VERSION BELOW MATCHES CURRENT SS-CONFIG BOILERPLATE ##
+## IN CASE OF EMERGENCY CONFLICTS THE SLICKSTACK TEAM MIGHT MISMATCH SAID BUILDS ##
+
 ## ensure correct Ubuntu version is installed ##
 UBUNTU_VERSION=`lsb_release -rs`
 if [[ "${UBUNTU_VERSION}" != "20.04" ]]; then
@@ -404,11 +407,13 @@ source /var/www/ss-install-nginx
 source /var/www/ss-encrypt
 
 ####################################################################################################
-#### SS-Install: Install MySQL 5.7 (Single Database Only) ##########################################
+#### SS-Install: Install MySQL 8.0.x (Single Database Only) ########################################
 ####################################################################################################
 
+## TEMP DISABLED DUE TO ISSUES WITH INSTALL ... MANUALLY INSTALL MYSQL INSTEAD ##
+
 ## run ss-install-mysql ##
-source /var/www/ss-install-mysql
+# source /var/www/ss-install-mysql
 
 ####################################################################################################
 #### SimpleStack: Install WordPress CMS (Download + Unzip WordPress Archive) #######################
@@ -1035,5 +1040,6 @@ echo -e "\e[36mSimpleStack installation complete! Please reboot server and ensur
 ## Ref: https://wordpress.stackexchange.com/questions/165507/site-redirecting-to-wp-signup-php
 ## Ref: https://askubuntu.com/questions/86849/how-to-unzip-a-zip-file-from-the-terminal
 ## Ref: https://www.computerhope.com/unix/rsync.htm
+## Ref: https://lowendbox.com/blog/wordpress-cheap-vps-lowendscript/
 
 ## SS_EOF

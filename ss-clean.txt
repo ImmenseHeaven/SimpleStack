@@ -503,6 +503,8 @@ rm /var/www/html/wp-content/Dropbox_Backup*
 rm /var/www/html/wp-content/bps-backup*
 rm /var/www/html/wp-content/backups-dup-pro*
 rm /var/www/html/wp-content/sedlex* ## backup scheduler files
+rm /var/www/html/wp-content/uploads-webpc* ## creates instability, hijacks WP Core,bad practice (By webp-converter-for-media)
+rm /var/www/html/wp-content/wpo-cache* ## ss conflicts
 
 ####################################################################################################
 #### cleanup /var/www/html/wp-content/mu-plugins/ ##################################################
@@ -689,6 +691,7 @@ rm /var/www/html/wp-content/plugins/similar-posts* ## database thrashing
 rm /var/www/html/wp-content/plugins/simple-monero-miner-coin-hive* ## cryptomining
 rm /var/www/html/wp-content/plugins/simple-share-buttons-adder* ## serious errors
 rm /var/www/html/wp-content/plugins/simple-wistia-embed* ## exists in wp core
+rm /var/www/html/wp-content/plugins/sitespeed* ## malware (as per Sucuri report)
 rm /var/www/html/wp-content/plugins/sitewide-message/ ## abandoned
 rm /var/www/html/wp-content/plugins/snapshot ## unsafe local archives (by WPMU Dev)
 rm /var/www/html/wp-content/uploads/sucuri* ## ss conflicts, bloated

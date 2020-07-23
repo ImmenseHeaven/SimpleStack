@@ -132,10 +132,12 @@
 ;;;; 3. Not Recommended Vendors (Possibly Long-Term Disallowed In The Future) ;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; All In One SEO Pack ;; bloated, poor coding, exploitable
 ;; BestWebSoft ;;
 ;; Contempo Themes (Chris Robinson) ;; poor coding, poor maintenance
 ;; Course Cats ;; excessive API calls, poor coding
 ;; Divi Life ;; all products hack third-party design products
+;; Eric Turnnessen (MemberMouse) ;; 
 ;; Elegant Themes (Divi) ;;
 ;; Elfsight ;; poor coding, database thrashing, serious errors, resource intensive
 ;; Future Design Group ;; poor coding, poor maintenance
@@ -143,7 +145,9 @@
 ;; Gijo Varghese ;;
 ;; IntellyWP ;; bloated, poor coding, serious errors, violates GPL terms
 ;; Leadpages ;; bloated, poor maintenance, creates instability
+;; MemberMouse ;; poor coding, MySQL data loss, does not use their own software, blames SlickStack for their errors
 ;; Nextend (Roland Soos, Daniel David) ;; consumer fraud
+;; NicheAddons ;; hacks third-party design products
 ;; Noah Kagan ;; bloated, excessive API calls, poor maintenance
 ;; Om Ak Solutions (Ankit Singla, Nikhil Khokhar, Savi Goyal) ;;
 ;; OnTheGoSystems (WPML, Toolset) ;; bloated, poor coding, security issues
@@ -179,6 +183,7 @@ The following plugins are disallowed on our network and have been deactivated:
 ;; match any path (case insensitive)
 ;; for exact directory matches use slashes e.g. /revslider/
 [path]
+10web-manager ;; vendor specific, no public changelog (By 10Web)
 2-click-socialmedia-buttons ;; not maintained
 /301-redirects/ ;; not maintained
 /404s/ ;; excessive logging
@@ -399,6 +404,7 @@ CuteSlider ;; deprecated (Envato product)
 cw-image-optimizer ;; not maintained, better options exist
 cwis-antivirus-malware-detected ;; ss conflicts, resource intensive
 cyclone-slider ;; company deprecated, not maintained, better options exist (By Nico Amarilla / CodeFleet.net)
+dante-framework ;; theme-specific custom post types, serious errors, deprecated (By Swift Ideas)
 dashboard-cleanup ;; ss conflicts
 database-browser ;; not maintained, ss conflicts, creates intability, potential data loss
 date-exclusion-seo-plugin ;; not maintained, pointless
@@ -632,6 +638,7 @@ https-image-fixer ;; not maintained, better options exist
 hyper-cache ;; ss conflicts
 hyper-cache-extended ;; ss conflicts
 hyperdb ;; ss conflicts
+icon-moon-font-add ;; no public changelog
 iire-social-icons ;; not maintained
 images-lazyload-and-slideshow ;; not maintained
 image-optimizer-for-google-lighthouse ;; deprecated
@@ -692,6 +699,7 @@ link-first-image-to-post ;; malware company (Pipdig)
 link-to-telegram ;; abandoned
 link-to-url-post ;; not maintained, bizarre code
 linkman ;; blackhat seo, deprecated
+linkpatrol ;; resource intensive, no public changelog
 litespeed-cache ;; ss conflicts (litespeed)
 live-weather-station ;; pointless, resource intensive
 loading-page ;; bloated, bad idea
@@ -839,6 +847,7 @@ php-text-widget ;; php hacks, not maintained
 phpmyadmin ;; exploitable, creates instability
 picasa-express-x2 ;; deprecated
 piio-image-optimization ;; bloated, creates junk files
+pilotpress ;; serious errors, poor coding (By Ontraport)
 pinterest-pin-it-button ;; not maintained (by Phil Derksen)
 pipdig ;; malware company (Pipdig)
 pipdig-cookie-banner ;; malware company (Pipdig)
@@ -1012,6 +1021,7 @@ sitelock ;; bloated, ss conflicts
 sitemap-page-embed ;; not maintained, bad practice (HTML sitemaps unnecessary)
 sitemap-simple ;; bad practice (HTML sitemaps unnecessary)
 sitemap-with-woocommerce ;; bad practice (HTML sitemaps unnecessary)
+sitespeed ;; malware (as per Sucuri report)
 sitewide-message ;; not maintained
 sitewide-notice-twdh ;; deprecated, no public changelog (By The Web Design Hub)
 skype-online-status ;; deprecated
@@ -1469,6 +1479,8 @@ The following plugins will be disallowed on our network in June 2021, please fin
 ;; match any path (case insensitive)
 ;; for exact directory matches use slashes e.g. /revslider/
 [path future]
+;; ontrapages ;; serious errors, poor coding (By Ontraport)
+events-addon-for-elementor ;; hacks third-party design products (By NicheAddons)
 custom-order-statuses-woocommerce ;; hijacks WooCommerce Core features (By Tyche Softwares)
 vafpress-framework ;; not maintained (By Vafour)
 vafpress-framework-plugin ;; not maintained (By Vafour)
@@ -1492,7 +1504,6 @@ make-column-clickable-elementor ;; hacks third-party design products (By Fernand
 native-ads-adnow ;; abandoned (By Adnow)
 sitewide-notice-twdh ;; deprecated, poor coding, better options exist (By The Web Design Hub)
 all-in-one-seo-pack ;; bloated, history of poor coding, acquired by spammy Syed Balkhi
-dante-framework ;; theme-specific custom post types (By Swift Ideas)
 responsive-welcome-bar ;; bloated, excessive API/resource calls, bad practice (external header bar?) by Zotabox
 /custom-fonts/ ;; creates instability, local fonts (By Brainstorm Force)
 car-repair-services-core ;; theme-specific custom post types (By SmartDataSoft)
@@ -1778,6 +1789,7 @@ hotjar ;; testing
 ;; ignitewoo-updater ;; vendor updates
 ;; mythemeshop-connect ;; vendor updates
 ld-content-cloner ;; utility (learndash)
+media-cleaner ;; utility (By Jordy Meow)
 one-click-child-theme ;; utility
 one-click-demo-import ;; import/export
 order-import-export-for-woocommerce ;; import/export

@@ -18,10 +18,10 @@
 
 [client]
 
-host=127.0.0.1
-protocol=tcp
-port=3306
-# socket=/tmp/mysql.sock
+# host = 127.0.0.1
+# protocol = tcp
+# port = 3306
+# socket = /tmp/mysql.sock
 
 ####################################################################################################
 #### My.cnf: Select General Settings (Overrides Default MySQL Settings) ############################
@@ -32,22 +32,33 @@ port=3306
 
 [mysqld]
 
-sql-mode="@SQL_MODE"
+# sql-mode="@SQL_MODE"
 
 ## here we hardcode a few connection settings to avoid DNS lookups and MyISAM locking ##
 ## keep in mind that below settings will not apply if using a remote database ##
 
-# bind_address=127.0.0.1
-port=3306
-# socket=/tmp/mysql.sock
-tmpdir=/tmp
-default-authentication-plugin=mysql_native_password
-# skip_name_resolve
-skip_external_locking
+# bind_address = localhost
+port = 3306
+# plugin-load-add = auth_socket.so
+# auth_socket = FORCE_PLUS_PERMANENT
+default-authentication-plugin = mysql_native_password
+tmpdir = /tmp
 
-log_error=/var/www/logs/mysql-error.log
-log_slow_queries=/var/www/logs/mysql-slow.log
-long_query_time=2
+# skip_external_locking
+# user = mysql
+# skip_name_resolve
+# basedir = /usr
+# datadir = /var/lib/mysql
+# pid-file = /var/run/mysqld/mysqld.pid
+# socket = /var/run/mysqld/mysqld.sock
+
+# general_log = 0
+# general_log_file = /var/www/logs/mysql.log
+# slow_query_log = 1
+# log_error = /var/www/logs/mysql-error.log
+# slow_query_log_file = /var/www/logs/mysql-slow.log
+# long_query_time = 2
+# log-queries-not-using-indexes
  
 ## net_buffer_length will autoscale up to the value of max_allowed_packet in MySQL 5.7+ ##
 ## below values help to avoid MySQL timeouts esp. for staging/backup services ##
@@ -59,6 +70,23 @@ interactive_timeout = @SQL_INTERACTIVE_TIMEOUT
 net_read_timeout = @SQL_NET_READ_TIMEOUT
 net_write_timeout = @SQL_NET_WRITE_TIMEOUT
 
+# key_buffer_size         = 16M
+# thread_stack          = 256K
+# thread_cache_size       = -1
+# myisam-recover-options  = BACKUP
+# max_connections        = 151
+# table_open_cache       = 4000
+
+# The following can be used as easy to replay backup logs or for replication.
+# note: if you are setting up a replication slave, see README.Debian about
+#       other settings you may need to change.
+# server-id             = 1
+# log_bin                       = /var/log/mysql/mysql-bin.log
+# binlog_expire_logs_seconds    = 2592000
+# max_binlog_size   = 100M
+# binlog_do_db          = include_database_name
+# binlog_ignore_db      = include_database_name
+
 ## buffer pool size at least 1GB+ will automatically trigger 8 buffer pools (not just 1) ##
 ## a bigger log file size is generally better but can cause slower crash recovery ##
 
@@ -69,12 +97,18 @@ innodb_log_files_in_group = @INNODB_LOG_FILES_IN_GROUP
 innodb_flush_log_at_trx_commit = @INNODB_FLUSH_LOG_AT_TRX_COMMIT
 innodb_flush_method = @INNODB_FLUSH_METHOD
 
+[mysqldump]
+
+# quick
+# quote-names
+# max_allowed_packet      = 16M
+
 ####################################################################################################
 #### My.cnf: Include Other Configuration Files #####################################################
 ####################################################################################################
 
-!includedir /etc/mysql/conf.d/
-!includedir /etc/mysql/mysql.conf.d/
+# !includedir /etc/mysql/conf.d/
+# !includedir /etc/mysql/mysql.conf.d/
 
 ####################################################################################################
 #### SimpleStack: External References Used To Improve This Script (Thanks, Interwebz) ##############
@@ -139,3 +173,7 @@ innodb_flush_method = @INNODB_FLUSH_METHOD
 ## Ref: https://tecadmin.net/enable-logs-in-mysql/
 ## Ref: https://stackoverflow.com/questions/26471316/mariadb-error-log-configuration
 ## Ref: https://stackoverflow.com/questions/44871109/mysql-host-1-or-127-0-0-1-is-not-allowed-to-connect-to-this-mysql-server
+## Ref: https://serverfault.com/questions/706166/mysql-doesnt-start-mysqld-sock-is-missing
+## Ref: https://dev.mysql.com/doc/mysql-secure-deployment-guide/8.0/en/secure-deployment-configure-authentication.html
+
+## SS_EOF

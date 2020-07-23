@@ -20,7 +20,7 @@
 ## rebuild ss-config if outdated errors: https://simplestack.git.supercluster.io/ss-config-sample.txt ##
 ## copy and paste entire ss-config boilerplate before modifying variables ##
 
-SS_BUILD="JULY2020A"
+SS_BUILD="JULY2020B"
 
 ####################################################################################################
 #### SS-Config: Select WordPress + WP-Config Settings ##############################################
